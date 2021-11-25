@@ -1,0 +1,20 @@
+{
+	"translations": {
+		"de": { 
+			"Topic": "Topic",
+			"Show Position Data": "Zeige Positionsdaten",
+			"Distance to": "Entfernung nach",
+			"Place": "Ort",
+			"acc": "Genauigkeit",
+			"vac": "vertikale Genauigkeit",
+			"alt": "Höhe über NN",
+			"Chargestatus": "Ladestatus",
+			"unknown": "unbekannt",
+			"unplugged": "nicht verbunden",
+			"charging": "lädt",
+			"full": "vollständig geladen",
+			"Battery": "Batterie",
+			"Airpressure": "Luftdruck"
+		}
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"id": "{73FEF334-3C55-222E-42B1-20800A4A63D0}",
+	"name": "OwnTracksHook",
+	"type": 1,
+	"vendor": "",
+	"aliases": 
+	[
+		"OwnTracks Hook"
+	],
+	"parentRequirements": [],
+	"childRequirements": ["{80C20F91-3E29-85FA-9702-3A6B22C1D276}"],
+	"implemented": ["{7F97470D-E237-1B79-0BF9-6D859E1066A9}"],
+	"prefix": "OTR"
+}

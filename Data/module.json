@@ -1,0 +1,14 @@
+{
+	"id": "{8398750C-51CE-51C8-97A9-9356BB11ABDD}",
+	"name": "OwnTrackData",
+	"type": 3,
+	"vendor": "Silberstreifen",
+	"aliases": 
+	[
+		"OwnTrack Data"
+	],
+	"parentRequirements": ["{7F97470D-E237-1B79-0BF9-6D859E1066A9}"],
+	"childRequirements": [],
+	"implemented": ["{80C20F91-3E29-85FA-9702-3A6B22C1D276}"],
+	"prefix": "OTR"
+}

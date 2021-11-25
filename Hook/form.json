@@ -1,0 +1,7 @@
+{
+	"elements":
+	[
+		{ "name": "Username", "type": "ValidationTextBox", "caption": "UserID" },
+		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" }
+	]
+}

@@ -1,0 +1,11 @@
+{
+    "elements":
+    [
+		{ "type": "ValidationTextBox", "name": "Topic", "caption": "Topic" },
+        { "type": "CheckBox", "name": "showPositionData", "caption": "Show Position Data" }
+	],
+    "actions":
+    [
+    ]
+}
+
