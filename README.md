@@ -42,6 +42,10 @@
 		<td>V1.00 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Grundversion</td>
 	  </tr>
+	  <tr>
+		<td>V1.01 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Android missing RID and INRID</td>
+	  </tr>
 	</table>
   </body>
 </html>

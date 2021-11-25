@@ -88,6 +88,19 @@
 									}
 								}
 								break;
+							case 'inregions':
+								if(property_exists($Payload, inrids))break;
+								foreach($Payload->inregions as &$region){$region = md5($region);}
+								$waypoints = json_decode($this->ReadAttributeString('waypoints'));
+								foreach($waypoints as $waypoint){
+									if(isset($waypoint->rid) && isset($waypoint->desc)){
+										$entry = (array_search($waypoint->rid, $Payload->inregions) !== false)?true:false;
+										$this->SendDebug($waypoint->rid, $waypoint->desc."-".$entry?'ja':'nein', 0);
+										$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
+										if($entry != $this->GetValue($waypoint->rid)) $this->SetValue($waypoint->rid,$entry);
+									}
+								}
+								break;
 						}
 
 					}
@@ -119,7 +132,8 @@
 				}
 
 				if($Payload->_type == 'transition'){
-					if(isset($Payload->rid) && isset($Payload->event) && isset($Payload->desc)){
+					if(isset($Payload->event) && isset($Payload->desc)){
+						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
 						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
 						$entry = ($Payload->event == 'enter')?true:false;
 						$this->SetValue($Payload->rid, $entry);
@@ -127,7 +141,8 @@
 				}
 
 				if($Payload->_type == 'waypoint'){
-					if(isset($Payload->rid) && isset($Payload->desc) && isset($Payload->lon) && isset($Payload->lat)){
+					if(isset($Payload->desc) && isset($Payload->lon) && isset($Payload->lat)){
+						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
 						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
 
 						$waypoints = json_decode($this->ReadAttributeString('waypoints'));
@@ -142,7 +157,8 @@
 					if(isset($Payload->waypoints)){
 						$waypoints = new class{};
 						foreach($Payload->waypoints as $waypoint){
-							if(isset($waypoint->rid) && isset($waypoint->desc) && isset($waypoint->lon) && isset($waypoint->lat)){
+							if(isset($waypoint->desc) && isset($waypoint->lon) && isset($waypoint->lat)){
+								if(!isset($waypoint->rid))$waypoint->rid = md5($waypoint->desc);
 								$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
 								$rid = $waypoint->rid;
 								if(!property_exists($waypoints, $rid)) $waypoints->$rid = $waypoint;
