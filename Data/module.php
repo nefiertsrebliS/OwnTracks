@@ -1,4 +1,4 @@
-<?
+<?php
 
 	class OwnTrackData extends IPSModule
 	{
