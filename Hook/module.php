@@ -67,11 +67,15 @@ declare(strict_types=1);
             # friends or cards)
             print json_encode($response);
 
-            $this->SendDebug('Data', print_r($payload, true), 0);
+            $this->SendDebug('Data', json_encode($payload), 0);
         
             if (!isset($payload->topic)) {
-                $this->SendDebug('Malformed', print_r($payload, true), 0);
-                return;
+                if(isset($_SERVER['HTTP_X_LIMIT_D']) && isset($_SERVER['HTTP_X_LIMIT_U'])){
+                    $payload->topic = 'owntracks/'.$_SERVER['HTTP_X_LIMIT_U'].'/'.$_SERVER['HTTP_X_LIMIT_D'];
+                }else{
+                    $this->SendDebug('Malformed', json_encode($payload), 0);
+                    return;
+                }
             }
 
             $Data = '{"DataID":"{80C20F91-3E29-85FA-9702-3A6B22C1D276}","Topic":"'.$payload->topic.'", "Payload":'.json_encode($payload).'}';

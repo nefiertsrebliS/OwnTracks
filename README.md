@@ -46,6 +46,11 @@
 		<td>V1.01 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Android missing RID and INRID</td>
 	  </tr>
+	  <tr>
+		<td>V1.02 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Optimierung ReceiveData<br>
+			Neu: Unterstützung von NextTracks</td>
+	  </tr>
 	</table>
   </body>
 </html>

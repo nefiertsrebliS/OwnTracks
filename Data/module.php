@@ -78,31 +78,30 @@
 								$this->RegisterVariableInteger($key, $this->Translate('Chargestatus'), 'Chargestatus.OTR',0);
 								$this->SetValue($key, $data);
 								break;
-							case 'inrids':
-								$waypoints = json_decode($this->ReadAttributeString('waypoints'));
-								foreach($waypoints as $waypoint){
-									if(isset($waypoint->rid) && isset($waypoint->desc)){
-										$entry = (array_search($waypoint->rid, $Payload->inrids) !== false)?true:false;
-										$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
-										if($entry != $this->GetValue($waypoint->rid)) $this->SetValue($waypoint->rid,$entry);
-									}
-								}
-								break;
-							case 'inregions':
-								if(property_exists($Payload, inrids))break;
-								foreach($Payload->inregions as &$region){$region = md5($region);}
-								$waypoints = json_decode($this->ReadAttributeString('waypoints'));
-								foreach($waypoints as $waypoint){
-									if(isset($waypoint->rid) && isset($waypoint->desc)){
-										$entry = (array_search($waypoint->rid, $Payload->inregions) !== false)?true:false;
-										$this->SendDebug($waypoint->rid, $waypoint->desc."-".$entry?'ja':'nein', 0);
-										$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
-										if($entry != $this->GetValue($waypoint->rid)) $this->SetValue($waypoint->rid,$entry);
-									}
-								}
-								break;
 						}
 
+					}
+
+					if(isset($Payload->inregions)){
+						if(!isset($Payload->inrids)){
+							$Payload->inrids = $Payload->inregions;
+							foreach($Payload->inrids as &$regionID){$regionID = md5($regionID);}
+						}
+						$waypoints = json_decode($this->ReadAttributeString('waypoints'));
+
+						$Idents = array();
+						foreach(IPS_GetChildrenIDs($this->InstanceID) as $wpID)$Idents[$wpID] = IPS_GetObject($wpID)['ObjectIdent'];
+						foreach($waypoints as $rid=>$waypoint) if(!array_search($rid, $Idents))unset($waypoints->$rid);
+						$this->SendDebug('Waypoints', json_encode($waypoints), 0);
+						$this->WriteAttributeString('waypoints', json_encode($waypoints));
+
+						foreach($waypoints as $waypoint){
+							if(isset($waypoint->rid) && isset($waypoint->desc)){
+								$entry = (array_search($waypoint->rid, $Payload->inrids) !== false)?true:false;
+								$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
+								if($entry != $this->GetValue($waypoint->rid)) $this->SetValue($waypoint->rid,$entry);
+							}
+						}
 					}
 
 					if(isset($Payload->lon) && isset($Payload->lat) && isset($Payload->alt) && isset($Payload->tst) && $this->ReadPropertyBoolean('showPositionData')){
@@ -129,18 +128,18 @@
 						$this->RegisterVariableString('place', $this->Translate('Place'));
 						$this->SetValue('place',$this->GetAdressString());
 					}
-				}
 
-				if($Payload->_type == 'transition'){
+				}elseif($Payload->_type == 'transition'){
+
 					if(isset($Payload->event) && isset($Payload->desc)){
 						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
 						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
 						$entry = ($Payload->event == 'enter')?true:false;
 						$this->SetValue($Payload->rid, $entry);
 					}
-				}
 
-				if($Payload->_type == 'waypoint'){
+				}elseif($Payload->_type == 'waypoint'){
+
 					if(isset($Payload->desc) && isset($Payload->lon) && isset($Payload->lat)){
 						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
 						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
@@ -151,9 +150,9 @@
 						$this->WriteAttributeString('waypoints', json_encode($waypoints));
 						$this->SendDebug("Waypoints", $this->ReadAttributeString('waypoints'), 0);
 					}
-				}
 
-				if($Payload->_type == 'waypoints'){
+				}elseif($Payload->_type == 'waypoints'){
+
 					if(isset($Payload->waypoints)){
 						$waypoints = new class{};
 						foreach($Payload->waypoints as $waypoint){
