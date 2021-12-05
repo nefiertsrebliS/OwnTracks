@@ -4,7 +4,7 @@ declare(strict_types=1);
 
     include_once __DIR__ . '/../libs/WebHookModule.php';
 
-    class OwnTracksHook extends WebHookModule
+    class OwnTracksMap extends WebHookModule
     {
 
         #=====================================================================================
@@ -18,7 +18,11 @@ declare(strict_types=1);
             $this->RegisterPropertyString('Username', '');
             $this->RegisterPropertyString('Password', '');
             $this->RegisterPropertyString('HookName', '');
+            $this->RegisterPropertyString('Devices', '{}');
+            $this->RegisterPropertyString('Height', '98vh');
+            $this->RegisterPropertyString('Width', '100%');
             $this->RegisterAttributeString('IncorrectLogin', '{}');
+            $this->RegisterVariableString('maplink', 'Map', '~HTMLBox');
         }
 
         #=====================================================================================
@@ -35,9 +39,35 @@ declare(strict_types=1);
         {
             parent::SetHook($this->ReadPropertyString('HookName'));
             
+            $this->SendDebug("Devices", $this->ReadPropertyString('Devices'), 0);
+            foreach($this->GetMessageList() as $Message =>$Types) if(array_search(VM_UPDATE, $Types) !== false){
+                $this->UnregisterMessage($Message, VM_UPDATE);
+            }
+            foreach(json_decode($this->ReadPropertyString('Devices')) as $device){
+                $this->RegisterMessage(IPS_GetObjectIDByIdent('position', $device->InstanceID), VM_UPDATE);
+            }
+
+            $maplink = '<iframe src="./hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
+            $this->SetValue('maplink', $maplink);
+
             //Never delete this line!
             parent::ApplyChanges();
 
+        }
+
+        #================================================================================================
+        public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+        #================================================================================================
+        {
+
+            switch ($Message) {
+                case IM_CHANGESTATUS:
+                    break;
+                case VM_UPDATE:
+                    $maplink = '<iframe src="./hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
+                    $this->SetValue('maplink', $maplink);
+                    break;
+            }
         }
 
         #=====================================================================================
@@ -46,31 +76,11 @@ declare(strict_types=1);
         {
 
             //Never delete this line!
-            parent::ProcessHookData();
+            if(!parent::ProcessHookData())return;
 
-            header("Content-type: application/json");
-            $payload = json_decode(file_get_contents("php://input"));
-
-            $response = array();
-            # optionally add objects to return to the app (e.g.
-            # friends or cards)
-            print json_encode($response);
-
-            $this->SendDebug('Data', json_encode($payload), 0);
-        
-            if (!isset($payload->topic)) {
-                if(isset($_SERVER['HTTP_X_LIMIT_D']) && isset($_SERVER['HTTP_X_LIMIT_U'])){
-                    $payload->topic = 'owntracks/'.$_SERVER['HTTP_X_LIMIT_U'].'/'.$_SERVER['HTTP_X_LIMIT_D'];
-                }else{
-                    $this->SendDebug('Malformed', json_encode($payload), 0);
-                    return;
-                }
-            }
-
-            $Data = '{"DataID":"{80C20F91-3E29-85FA-9702-3A6B22C1D276}","Topic":"'.$payload->topic.'", "Payload":'.json_encode($payload).'}';
-            $this->SendDebug("SendDataToChildren", $Data, 0);
-            $this->SendDataToChildren($Data);
-        
+            require(__DIR__ . '/map.php');
+            
+                    
         }
 	 
         #=====================================================================================
@@ -79,4 +89,5 @@ declare(strict_types=1);
         {
             return parent::UpdateConfigurationForm(file_get_contents(__DIR__ . '/form.json'));
         }
+
     }

@@ -180,7 +180,8 @@
 
 			$position = json_decode($this->GetValue('position'));
 			$url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".str_replace (",",".",$position->lat)."&lon=".str_replace (",",".",$position->lon);
-			$result = json_decode(file_get_contents($url));
+			$result = json_decode(@file_get_contents($url));
+			if(!is_object($result))return false;
 
 			$str = @$result->address->road; 
 			$nr  = @$result->address->house_number;

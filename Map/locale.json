@@ -4,6 +4,12 @@
 			"Hookname": "Name des Hooks",
 			"UserID": "BenutzerID",
 			"Password": "Passwort",
+			"Map": "Karte",
+			"Devices on the Map": "Geräte auf der Karte",
+			"Height of Map": "Höhe der Karte",
+			"Width of Map": "Breite der Karte",
+			"Color": "Farbe",
+			"InstanceID":"InstanzID",
 			"reset lock": "Sperre zurücksetzen",
 			"connected": "verbunden",
 			"locked against unauthorized access": "gesperrt gegen unbefugten Zugriff"

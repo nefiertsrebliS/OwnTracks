@@ -1,7 +1,17 @@
 {
 	"elements":
 	[
+		{ "name": "HookName", "type": "ValidationTextBox", "caption": "Hookname", "validate": "\\b(\\w+)"},
 		{ "name": "Username", "type": "ValidationTextBox", "caption": "UserID" },
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" }
+	],
+    "actions":
+    [
+        { "type": "Button", "label": "reset lock", "onClick": "OTR_ResetLock($id);" }
+    ],
+    "status":
+	[
+		{ "code": 102, "icon": "active", "caption": "connected" },
+		{ "code": 205, "icon": "error", "caption": "locked against unauthorized access" }
 	]
 }

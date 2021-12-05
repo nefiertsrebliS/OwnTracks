@@ -1,0 +1,14 @@
+{
+	"id": "{B7FC4196-082F-535A-FB5C-4337C8E6C39F}",
+	"name": "OwnTracksMap",
+	"type": 3,
+	"vendor": "OwnTracks",
+	"aliases": 
+	[
+		"OwnTracks Map"
+	],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "OTR"
+}

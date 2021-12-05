@@ -51,6 +51,14 @@
 		<td>Fix: Optimierung ReceiveData<br>
 			Neu: Unterstützung von NextTracks</td>
 	  </tr>
+	  <tr>
+		<td>V1.03 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Map zur Anezeige der Gerätepositionen<br>
+			Neu: Einloggen per Secret-Code<br>
+			Neu: Sperren des Zugangs nach 3 Fehlversuchen in 24h auf einer IP-Adresse und 10 Fehlversuchen in 24h insgesamt<br>
+			Neu: OTR_GetSecret(12345) zum Anzeigen des Secret-Codes<br>
+			Neu: mehrere Hooks mit unterschiedlichem Zugang möglich</td>
+	  </tr>
 	</table>
   </body>
 </html>

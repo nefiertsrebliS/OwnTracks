@@ -1,0 +1,58 @@
+{
+	"elements":
+	[
+		{ "name": "HookName", "type": "ValidationTextBox", "caption": "Hookname", "validate": "\\b(\\w+)"},
+		{ "name": "Username", "type": "ValidationTextBox", "caption": "UserID" },
+		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
+		{ "name": "Height", "type": "ValidationTextBox", "caption": "Height of Map" },
+		{ "name": "Width", "type": "ValidationTextBox", "caption": "Width of Map" },
+		{
+			"type": "List",
+			"name": "Devices",
+			"caption": "Devices on the Map",
+			"rowCount": 5,
+			"add": true,
+			"delete": true,
+			"sort": {
+				"column": "Name",
+				"direction": "ascending"
+			},
+			"columns": [{
+				"caption": "InstanceID",
+				"name": "InstanceID", 
+				"width": "150px",
+				"add": 0,
+				"edit": {
+					"type": "SelectInstance",
+					"validModules":["{8398750C-51CE-51C8-97A9-9356BB11ABDD}", "{C41F53B8-052E-5F16-EF2D-D379B55D9603}"]
+				}
+			}, {
+				"caption": "Name",
+				"name": "Name",
+				"width": "auto",
+				"add": "",
+				"edit": {
+					"type": "ValidationTextBox"
+				}
+			}, {
+				"caption": "Color",
+				"name": "Color",
+				"width": "150px",
+				"add": -1,
+				"edit": {
+					"type": "SelectColor"
+				}
+			}],
+			"values": []
+		}	
+	],
+    "actions":
+    [
+        { "type": "Button", "label": "reset lock", "onClick": "OTR_ResetLock($id);" }
+    ],
+    "status":
+	[
+		{ "code": 102, "icon": "active", "caption": "connected" },
+		{ "code": 205, "icon": "error", "caption": "locked against unauthorized access" }
+	]
+}
