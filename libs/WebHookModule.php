@@ -165,7 +165,7 @@ class WebHookModule extends IPSModule
                         foreach ($hooks as $index => $hook) {
                             if ($hook['TargetID'] != $this->InstanceID){
                                 $word = @explode('/hook/', $hook['Hook'])[1];
-                                if($word)$regex .= '\\b(?<!'.$word.')';
+                                if($word)$regex .= '\\b(?<!^'.$word.')';
                             }
                         }
                     }

@@ -1,7 +1,7 @@
 {
 	"elements":
 	[
-		{ "name": "HookName", "type": "ValidationTextBox", "caption": "Hookname", "validate": "\\b(\\w+)"},
+		{ "name": "HookName", "type": "ValidationTextBox", "caption": "Hookname  (/hook/...)", "validate": "\\b(\\w+)"},
 		{ "name": "Username", "type": "ValidationTextBox", "caption": "UserID" },
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
 		{ "name": "Height", "type": "ValidationTextBox", "caption": "Height of Map" },

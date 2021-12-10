@@ -1,7 +1,7 @@
 {
 	"translations": {
 		"de": { 
-			"Hookname": "Name des Hooks",
+			"Hookname  (/hook/...)": "Name des Hooks  (/hook/...)",
 			"UserID": "BenutzerID",
 			"Password": "Passwort",
 			"reset lock": "Sperre zurücksetzen",

@@ -23,13 +23,22 @@
 	<h2>Installation und Einstellung in IP-Symcon</h2>
 	Die Installation der Bibliothek wird <a href="https://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/module-store/">hier</a> beschrieben.
 	<ul>
-		<li>Im Bereich der I/O-Instanzen eine OwnTracks-Hook-Instanz anlegen</li>
-		<li><i>UserID</i> und <i>Password</i> aus der App eintragen</li>
-		<li>Eine OwnTracks-Daten-Instanz anlegen.
+		<li>Eine OwnTracks-Data-Instanz anlegen</li>
 		<li>Topic <i>owntracks/UserID/DeviceID</i> festlegen</li>
 		<li>Festlegen, ob Positionsdaten übernommen werden sollen</li>
+		<li>Wenn noch keine OwnTracks-Hook-Instanz existiert, wird diese automatisch im Bereich der I/O-Instanzen angelegt</li>
+		<li>Die OwnTracks-Hook-Instanz mit Hookname, UserID und Password aus der App konfigurieren</li>
+		<li><b>Der Hookname darf noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden</b></li>
 		<li>In der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
 	</ul> 
+	<h2>Map-Instanz</h2>
+	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden.
+	<h2>Alternativer Zugang von außen mit Secret-Code statt Username und Passwort</h2>
+	Die Zugangsadresse mit Secret-Code lautet:<br> 
+	<i>https://meineAdresse.net/hook/Hookname?Secret-Code</i><br>
+	Der Secret-Code kann mittels<br>
+	<i>OTR_getSecret(12345);</i><br>
+	ermittelt werden.
 	<h2>Lizenz</h2>
 	MIT License<br>
 	Copyright (c) 2021 nefiertsrebliS<br>
@@ -58,6 +67,10 @@
 			Neu: Sperren des Zugangs nach 3 Fehlversuchen in 24h auf einer IP-Adresse und 10 Fehlversuchen in 24h insgesamt<br>
 			Neu: OTR_GetSecret(12345) zum Anzeigen des Secret-Codes<br>
 			Neu: mehrere Hooks mit unterschiedlichem Zugang möglich</td>
+	  </tr>
+	  <tr>
+		<td>V1.04 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Bereinigung des Quellcodes</td>
 	  </tr>
 	</table>
   </body>

@@ -49,10 +49,8 @@
                         }
                         echo json_encode($Markers);
                     ?>;
-                    console.log(Markers);
                     
                     Markers.forEach(function(Marker, index){
-                        console.log(index, Marker);
                         layers[index] = new ol.layer.Vector({
                             source: new ol.source.Vector({
                                 features: [
@@ -106,34 +104,10 @@
                             maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
                         })
                     } 
-                    console.log(maxExtent);
-                    
-                    
-                    
                     
                     var layerExtent = layers[0].getSource().getExtent();
-                    console.log(map);
-                    console.log(layerExtent);
                     map.getView().fit(maxExtent , map.getSize());
-                    console.log(map.getView().getZoom());
                     map.getView().setZoom(map.getView().getZoom() * 0.98);
-                    console.log(map.getView().getZoom());
-            
-            map.addControl(new ol.control.LayerSwitcher(
-             [
-                 {
-                     layer : layers[0],
-                     config : {
-                         title : "test layer name 1",
-                         description : "test layer desc 1",
-                     }
-                 }
-             ],
-             {
-                 collapsed : true
-             }
-            ));
-            
                 </script>
               </body>
             </html>
