@@ -22,6 +22,7 @@
 	</ul> 
 	<h2>Installation und Einstellung in IP-Symcon</h2>
 	Die Installation der Bibliothek wird <a href="https://www.symcon.de/service/dokumentation/komponenten/verwaltungskonsole/module-store/">hier</a> beschrieben.
+	<h3>Daten-Instanz</h3>
 	<ul>
 		<li>Eine OwnTracks-Data-Instanz anlegen</li>
 		<li>Topic <i>owntracks/UserID/DeviceID</i> festlegen</li>
@@ -31,9 +32,11 @@
 		<li><b>Der Hookname darf noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden</b></li>
 		<li>In der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
 	</ul> 
-	<h2>Map-Instanz</h2>
-	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden.
-	<h2>Alternativer Zugang von außen mit Secret-Code statt Username und Passwort</h2>
+	<h3>Map-Instanz</h3>
+	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. In der Konfigurationstabelle können dann alle Daten-Instanzen, die auf der Karte angezeigt werden sollen, konfiguriert werden. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.
+	<h3>Sicherung des Zugangs</h3>
+	Da die Instanzen über WebHook auch aus dem Internet erreichbar sein müssen, sind diese mit <i>Benuternamen</i> und <i>Passwort</i> gesichert. Gibt man dreimal die Zugangsdaten falsch an, so wird der Zugang für diese IP gesperrt. Nach insgesamt 10 Fehlversuchen wird der Zugang für alle IPs für 24 Stunden gesperrt. Um den Zugang wieder zu entsperren, bitte in der Instanz die <i>Sperre zurücksetzen</i>-Taste drücken. 
+	<h3>Alternativer Zugang von außen mit Secret-Code statt Username und Passwort</h3>
 	Die Zugangsadresse mit Secret-Code lautet:<br> 
 	<i>https://meineAdresse.net/hook/Hookname?Secret-Code</i><br>
 	Der Secret-Code kann mittels<br>
@@ -71,6 +74,11 @@
 	  <tr>
 		<td>V1.04 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Bereinigung des Quellcodes</td>
+	  </tr>
+	  <tr>
+		<td>V1.05 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: persönliche Icon für die Kartendarstellung<br>
+			Neu: Anzeige der Location als "zuhause"</td>
 	  </tr>
 	</table>
   </body>

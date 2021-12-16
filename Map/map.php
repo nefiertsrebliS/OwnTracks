@@ -16,7 +16,7 @@
                 <div id="map" class="map"></div>
                 <script type="text/javascript">
                         // Resize Map
-            
+
                         document.getElementById("map").style.height = (window.innerHeight-10)+"px";
                         document.getElementById("map").style.width = (window.innerWidth-10)+"px";
             
@@ -34,22 +34,38 @@
                         })
                     });
                     var layers = [];
+                    var icons = [];
                     var Markers = <?
                         $Markers = array();
-                        foreach(json_decode($this->ReadPropertyString('Devices')) as $device){
-                            $position = json_decode(GetValue(IPS_GetObjectIDByIdent('position', $device->InstanceID)));
+                        $homeID = IPS_GetInstanceListByModuleID('{45E97A63-F870-408A-B259-2933F7EABF74}')[0];
+                        $devices = json_decode($this->ReadPropertyString('Devices'));
+                        array_multisort(array_column($devices,'Order'), $devices);
+
+                        foreach($devices as $device){
+                            if($device->InstanceID == $homeID){
+                                $position = json_decode(IPS_GetProperty($homeID, 'Location'));
+                                $position->lat = $position->latitude;
+                                $position->lon = $position->longitude;
+                            }else{
+                                $position = json_decode(GetValue(IPS_GetObjectIDByIdent('position', $device->InstanceID)));
+                            }
                             $color = substr("000000".dechex($device->Color),-6);
                             $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
                     
                             $Markers[] = array(
                                 $device->Name,
                                 $colorStr,
-                                array($position->lon, $position->lat)
+                                array($position->lon, $position->lat),
+                                $device->Scale,
+                                $device->InstanceID
                             );
                         }
                         echo json_encode($Markers);
                     ?>;
-                    
+
+                    let url = new URL(document.URL);
+                    let icon = new URLSearchParams(url.search)==''?'?icon=':'&icon=';
+
                     Markers.forEach(function(Marker, index){
                         layers[index] = new ol.layer.Vector({
                             source: new ol.source.Vector({
@@ -62,17 +78,13 @@
                             style: [
                                 new ol.style.Style({
                                     image: new ol.style.Circle({
-                                        radius: 10,
+                                        radius: 4,
                                         fill: new ol.style.Fill({
-                                            color: 'rgba('+Marker[1]+',0.2)'
-                                        }),
-                                        stroke: new ol.style.Stroke({
-                                            color: 'rgb('+Marker[1]+')',
-                                            width : 3    
+                                            color: 'rgba('+Marker[1]+',1)'
                                         })
                                     }),
                                     text: new ol.style.Text({
-                                        offsetY: 20,
+                                        offsetY: 15,
                                         font: '18px Calibri,sans-serif',
                                         text: Marker[0],
                                         fill: new ol.style.Fill({
@@ -88,6 +100,25 @@
                             ]
                         });
                         map.addLayer(layers[index]);
+                        icons[index] = new ol.layer.Vector({
+                            source: new ol.source.Vector({
+                                features: [
+                                    new ol.Feature({
+                                        geometry: new ol.geom.Point(ol.proj.fromLonLat(Marker[2]))
+                                    })
+                                ]
+                            }),
+                            style: [
+                                new ol.style.Style({
+                                    image: new ol.style.Icon({
+                                        scale: Marker[3],
+                                        anchor: [0.5, 1.1],
+                                        src: document.URL+icon+Marker[4]
+                                    })
+                                }),
+                            ]
+                        });
+                        map.addLayer(icons[index]);
                     })
             
                     map.getView().setMaxZoom(18);

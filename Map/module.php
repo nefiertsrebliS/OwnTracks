@@ -39,12 +39,14 @@ declare(strict_types=1);
         {
             parent::SetHook($this->ReadPropertyString('HookName'));
             
-            $this->SendDebug("Devices", $this->ReadPropertyString('Devices'), 0);
             foreach($this->GetMessageList() as $Message =>$Types) if(array_search(VM_UPDATE, $Types) !== false){
                 $this->UnregisterMessage($Message, VM_UPDATE);
             }
+            $homeID = IPS_GetInstanceListByModuleID('{45E97A63-F870-408A-B259-2933F7EABF74}')[0];
             foreach(json_decode($this->ReadPropertyString('Devices')) as $device){
-                $this->RegisterMessage(IPS_GetObjectIDByIdent('position', $device->InstanceID), VM_UPDATE);
+                if($device->InstanceID != $homeID){
+                    $this->RegisterMessage(IPS_GetObjectIDByIdent('position', $device->InstanceID), VM_UPDATE);
+                }
             }
 
             $maplink = '<iframe src="./hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
@@ -74,11 +76,22 @@ declare(strict_types=1);
         protected function ProcessHookData()
         #=====================================================================================
         {
-
             //Never delete this line!
             if(!parent::ProcessHookData())return;
 
-            require(__DIR__ . '/map.php');
+            if(isset($_GET['icon'])){
+                foreach(json_decode($this->ReadPropertyString('Devices')) as $device)if($device->InstanceID == $_GET['icon'])break;
+                $imgdata = base64_decode($device->Icon);
+
+                $mimetype = $this->getImageMimeType($imgdata);
+
+                $headhtml =  'Content-Type: image/'.$mimetype;
+                header($headhtml);
+                echo $imgdata;
+            }else{
+                require(__DIR__ . '/map.php');
+            }
+
             
                     
         }
@@ -90,4 +103,33 @@ declare(strict_types=1);
             return parent::UpdateConfigurationForm(file_get_contents(__DIR__ . '/form.json'));
         }
 
+        #=====================================================================================
+        private function getBytesFromHexString($hexdata){
+        #=====================================================================================
+        for($count = 0; $count < strlen($hexdata); $count+=2){
+                $bytes[] = chr(hexdec(substr($hexdata, $count, 2)));
+            }
+            return implode($bytes);
+        }
+    
+        #=====================================================================================
+        private function getImageMimeType($imagedata)
+        #=====================================================================================
+        {
+            $imagemimetypes = array( 
+                "jpeg" => "FFD8", 
+                "png" => "89504E470D0A1A0A", 
+                "gif" => "474946",
+                "bmp" => "424D", 
+                "tiff" => "4949",
+                "tiff" => "4D4D"
+            );
+    
+            foreach ($imagemimetypes as $mime => $hexbytes){
+                $bytes = $this->getBytesFromHexString($hexbytes);
+                if (substr($imagedata, 0, strlen($bytes)) == $bytes)
+                return $mime;
+            }
+            return false;
+        }
     }

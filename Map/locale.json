@@ -9,6 +9,8 @@
 			"Height of Map": "Höhe der Karte",
 			"Width of Map": "Breite der Karte",
 			"Color": "Farbe",
+			"Icon Scalefactor": "Icon-Skalierung",
+			"Order": "Reihenfolge",
 			"InstanceID":"InstanzID",
 			"reset lock": "Sperre zurücksetzen",
 			"connected": "verbunden",

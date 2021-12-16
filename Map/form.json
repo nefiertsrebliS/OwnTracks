@@ -14,30 +14,57 @@
 			"add": true,
 			"delete": true,
 			"sort": {
-				"column": "Name",
+				"column": "Order",
 				"direction": "ascending"
 			},
 			"columns": [{
+				"caption": "Order",
+				"name": "Order",
+				"width": "10%",
+				"add": "",
+				"edit": {
+					"type": "NumberSpinner",
+					"minimum": 0
+				}
+			}, {
 				"caption": "InstanceID",
 				"name": "InstanceID", 
-				"width": "150px",
+				"width": "20%",
 				"add": 0,
 				"edit": {
 					"type": "SelectInstance",
-					"validModules":["{8398750C-51CE-51C8-97A9-9356BB11ABDD}", "{C41F53B8-052E-5F16-EF2D-D379B55D9603}"]
+					"validModules":["{8398750C-51CE-51C8-97A9-9356BB11ABDD}", "{C41F53B8-052E-5F16-EF2D-D379B55D9603}", "{45E97A63-F870-408A-B259-2933F7EABF74}"]
 				}
 			}, {
 				"caption": "Name",
 				"name": "Name",
-				"width": "auto",
+				"width": "10%",
 				"add": "",
 				"edit": {
 					"type": "ValidationTextBox"
 				}
 			}, {
+				"caption": "Icon",
+				"name": "Icon",
+				"width": "10%",
+				"add": "",
+				"edit": {
+					"type": "SelectFile"
+				}
+			}, {
+				"caption": "Icon Scalefactor",
+				"name": "Scale",
+				"width": "auto",
+				"add": "",
+				"edit": {
+					"type": "NumberSpinner",
+					"digits": 2,
+					"minimum": 0.01
+				}
+			}, {
 				"caption": "Color",
 				"name": "Color",
-				"width": "150px",
+				"width": "10%",
 				"add": -1,
 				"edit": {
 					"type": "SelectColor"

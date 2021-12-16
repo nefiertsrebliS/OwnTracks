@@ -124,7 +124,7 @@ class WebHookModule extends IPSModule
 
             if($_SERVER['PHP_AUTH_USER'] !='' || $_SERVER['PHP_AUTH_PW']!='' || count($_GET) > 0){
                 if($this->isBlocked($IP)){
-                    header('WWW-Authenticate: Basic Realm="SecureHook"');
+                    header('WWW-Authenticate: Basic Realm="WebHook"');
                     header('HTTP/1.0 423 Locked');
                     echo 'Page locked';
                     $this->SendDebug('Locked $_SERVER', json_encode($_SERVER), 0);
@@ -137,9 +137,9 @@ class WebHookModule extends IPSModule
             $LogInOk = true;
             if ($_SERVER['PHP_AUTH_USER'] != $this->ReadPropertyString('Username'))$LogInOk = false;
             if ($_SERVER['PHP_AUTH_PW'] != $this->ReadPropertyString('Password'))$LogInOk = false;
-            foreach($_GET as $index => $value) if($index == $this->getSecret())$LogInOk = true;
+            if(isset($_GET[$this->getSecret()]))$LogInOk = true;
             if(!$LogInOk){
-                header('WWW-Authenticate: Basic Realm="SecureHook"');
+                header('WWW-Authenticate: Basic Realm="WebHook"');
                 header('HTTP/1.0 401 Unauthorized');
                 echo 'Authorization required';
                 $this->SendDebug('Unauthorized $_SERVER', json_encode($_SERVER), 0);
