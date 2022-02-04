@@ -11,14 +11,13 @@ declare(strict_types=1);
         public function Create()
         #=====================================================================================
         {
-
             //Never delete this line!
             parent::Create();
 
             $this->RegisterPropertyString('Username', '');
             $this->RegisterPropertyString('Password', '');
             $this->RegisterPropertyString('HookName', '');
-            $this->RegisterAttributeString('IncorrectLogin', '{}');
+            $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
         }
 
         #=====================================================================================
@@ -38,23 +37,23 @@ declare(strict_types=1);
             //Never delete this line!
             parent::ApplyChanges();
 
+            if($this->ReadPropertyString('Username') == '' || $this->ReadPropertyString('Password') == ''){
+                $this->SetStatus(206);
+            }else{
+                $this->SetStatus(json_decode($this->ReadAttributeString('LoginStatus'), true)['Status']);
+            }
         }
 
         #=====================================================================================
         protected function ProcessHookData()
         #=====================================================================================
         {
-
-            //Never delete this line!
-            parent::ProcessHookData();
+            if(!parent::ProcessHookData())return;
 
             header("Content-type: application/json");
             $payload = json_decode(file_get_contents("php://input"));
 
             $response = array();
-            # optionally add objects to return to the app (e.g.
-            # friends or cards)
-            print json_encode($response);
 
             $this->SendDebug('Data', json_encode($payload), 0);
         
@@ -63,6 +62,8 @@ declare(strict_types=1);
                     $payload->topic = 'owntracks/'.$_SERVER['HTTP_X_LIMIT_U'].'/'.$_SERVER['HTTP_X_LIMIT_D'];
                 }else{
                     $this->SendDebug('Malformed', json_encode($payload), 0);
+                    $response = array("result"=>"not ok", "error"=>"data malformed");
+                    print json_encode($response);
                     return;
                 }
             }
@@ -70,7 +71,8 @@ declare(strict_types=1);
             $Data = '{"DataID":"{80C20F91-3E29-85FA-9702-3A6B22C1D276}","Topic":"'.$payload->topic.'", "Payload":'.json_encode($payload).'}';
             $this->SendDebug("SendDataToChildren", $Data, 0);
             $this->SendDataToChildren($Data);
-        
+
+            print json_encode($response);
         }
 	 
         #=====================================================================================

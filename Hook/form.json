@@ -12,6 +12,8 @@
     "status":
 	[
 		{ "code": 102, "icon": "active", "caption": "connected" },
-		{ "code": 205, "icon": "error", "caption": "locked against unauthorized access" }
+		{ "code": 204, "icon": "error", "caption": "IP locked against unauthorized access" },
+		{ "code": 205, "icon": "error", "caption": "Instance locked against unauthorized access" },
+		{ "code": 206, "icon": "error", "caption": "UserID or Password no set" }
 	]
 }

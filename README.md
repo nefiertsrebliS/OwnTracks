@@ -80,6 +80,10 @@
 		<td>Neu: persönliche Icon für die Kartendarstellung<br>
 			Neu: Anzeige der Location als "zuhause"</td>
 	  </tr>
+	  <tr>
+		<td>V1.06 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Bei gesperrtem Zugang werden Daten verarbeitet</td>
+	  </tr>
 	</table>
   </body>
 </html>

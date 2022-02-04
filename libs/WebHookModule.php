@@ -117,42 +117,55 @@ class WebHookModule extends IPSModule
         #   Login authorized?
         #---------------------------------------------------------
 
-        if (($this->ReadPropertyString('Username') != '') || ($this->ReadPropertyString('Password') != '')) {
-
-            if (!isset($_SERVER['PHP_AUTH_USER'])) $_SERVER['PHP_AUTH_USER'] = '';
-            if (!isset($_SERVER['PHP_AUTH_PW'])) $_SERVER['PHP_AUTH_PW'] = '';
-
-            if($_SERVER['PHP_AUTH_USER'] !='' || $_SERVER['PHP_AUTH_PW']!='' || count($_GET) > 0){
-                if($this->isBlocked($IP)){
-                    header('WWW-Authenticate: Basic Realm="WebHook"');
-                    header('HTTP/1.0 423 Locked');
-                    echo 'Page locked';
-                    $this->SendDebug('Locked $_SERVER', json_encode($_SERVER), 0);
-                    $this->SendDebug('Locked $_GET', json_encode($_GET), 0);
-                    $this->SetStatus(205);
-                    return false;
-                }
-            }
-
-            $LogInOk = true;
-            if ($_SERVER['PHP_AUTH_USER'] != $this->ReadPropertyString('Username'))$LogInOk = false;
-            if ($_SERVER['PHP_AUTH_PW'] != $this->ReadPropertyString('Password'))$LogInOk = false;
-            if(isset($_GET[$this->getSecret()]))$LogInOk = true;
-            if(!$LogInOk){
-                header('WWW-Authenticate: Basic Realm="WebHook"');
-                header('HTTP/1.0 401 Unauthorized');
-                echo 'Authorization required';
-                $this->SendDebug('Unauthorized $_SERVER', json_encode($_SERVER), 0);
-                $this->SendDebug('Unauthorized $_GET', json_encode($_GET), 0);
-                return false;
-            }
+        #   kein Username oder Passwort gesetzt
+        if ($this->GetStatus() == 206) {
+            $this->LogMessage("Username or Password not set! Please set Username and Password to process data!", KL_ERROR);
+            header('HTTP/1.0 423 Locked');
+            echo 'Page locked';
+            return false;
         }
-        $this->setValid($IP);
+        
+        #   Instanz blockiert
+        if ($this->GetStatus() == 205) {
+            $this->LogMessage("Instance #".$this->InstanceID." is locked! Please unlock to process data! Access attempt from IP ".$IP, KL_ERROR);
+            header('HTTP/1.0 423 Locked');
+            echo 'Page locked';
+            return false;
+        }
+
+        #   IP blockiert
+        $this->RefreshLoginStatus();
+        $LockedIPs = json_decode($this->ReadAttributeString('LoginStatus'),true)['LockedIP'];
+        if (in_array($IP, $LockedIPs)) {
+            $this->LogMessage("Instance #".$this->InstanceID." is locked for IP ".$IP."! Please unlock to process data!", KL_ERROR);
+            header('HTTP/1.0 423 Locked');
+            echo 'Page locked';
+            return false;
+        }
+
+        if (!isset($_SERVER['PHP_AUTH_USER'])) $_SERVER['PHP_AUTH_USER'] = '';
+        if (!isset($_SERVER['PHP_AUTH_PW'])) $_SERVER['PHP_AUTH_PW'] = '';
+
+        $LogInOk = false;
+        if ($_SERVER['PHP_AUTH_USER'] == $this->ReadPropertyString('Username') && $_SERVER['PHP_AUTH_PW'] == $this->ReadPropertyString('Password'))$LogInOk = true;
+        if(isset($_GET[$this->getSecret()]))$LogInOk = true;
+        $this->SetLoginStatus($IP, $LogInOk);
+
+        if(!$LogInOk){
+            header('WWW-Authenticate: Basic Realm="WebHook"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Authorization required';
+            $this->SendDebug('Unauthorized $_SERVER', json_encode($_SERVER), 0);
+            $this->SendDebug('Unauthorized $_GET', json_encode($_GET), 0);
+            if ($_SERVER['PHP_AUTH_USER'] != '' || $_SERVER['PHP_AUTH_PW'] != '')$this->LogMessage("Instance #".$this->InstanceID.": Unauthorized access attempt from IP ".$IP, KL_WARNING);
+            return false;
+        }
+
         return true;
     }
 	 
         #=====================================================================================
-        public function UpdateConfigurationForm($jsonform) 
+        public function UpdateConfigurationForm(string $jsonform) 
         #=====================================================================================
         {
             $form = json_decode($jsonform);
@@ -177,64 +190,89 @@ class WebHookModule extends IPSModule
         }
 	 
         #=====================================================================================
-        private function isBlocked($IP) 
+        private function RefreshLoginStatus() 
         #=====================================================================================
         {
-            $IncorrectLogins = json_decode($this->ReadAttributeString('IncorrectLogin'));
+            $LoginStatus = json_decode($this->ReadAttributeString('LoginStatus'));
 
-            $blocked = false;
-            $found = false;
+            $status = 102;
             $FailTries = 0;
-            $NewIncorrectLogins = array();
-            foreach($IncorrectLogins as $IncorrectLogin){
-                if($IncorrectLogin->ts > time() - 24*3600){
-                    $FailTries += $IncorrectLogin->tries;
-                    if($IncorrectLogin->IP == $IP){
-                        $IncorrectLogin->ts = time();
-                        $IncorrectLogin->tries++;
-                        if($IncorrectLogin->tries > 3)$blocked = true;
-                        $found = true;
+            $NewLoginStatus = array('Data'=>array(), 'LockedIP'=>array(), 'Status'=>0);
+            foreach($LoginStatus->Data as $LoginDetails){
+                if($LoginDetails->ts > time() - 24*3600){
+                    $FailTries += $LoginDetails->tries;
+                    $NewLoginStatus['Data'][] = $LoginDetails;
+                    if($LoginDetails->tries > 3){
+                        $status = 204;
+                        $NewLoginStatus['LockedIP'][] = $LoginDetails->IP;
                     }
-                    $NewIncorrectLogins[] = $IncorrectLogin;
                 }
             }
-            if($FailTries > 10)$blocked = true;
-    
-            if(!$found){
-                $NewLogin['ts'] = time();
-                $NewLogin['tries'] = 1;
-                $NewLogin['IP'] = $IP;
-                $NewIncorrectLogins[] = $NewLogin;
-            }
 
-            $this->SendDebug('IncorrectLogin', json_encode($NewIncorrectLogins), 0);
-            $this->WriteAttributeString('IncorrectLogin', json_encode($NewIncorrectLogins));
-    
-            return $blocked;
+            if($FailTries > 10)$status = 205;
+            $NewLoginStatus['Status'] = $status;
+
+            $this->SendDebug('RefreshLoginStatus', json_encode($NewLoginStatus), 0);
+            $this->WriteAttributeString('LoginStatus', json_encode($NewLoginStatus));
+
+            $this->SetStatus($status);
         }
 	 
         #=====================================================================================
-        private function setValid($IP) 
+        private function SetLoginStatus($IP, $valid) 
         #=====================================================================================
         {
-            $IncorrectLogins = json_decode($this->ReadAttributeString('IncorrectLogin'));
+            $LoginStatus = json_decode($this->ReadAttributeString('LoginStatus'));
 
-            $NewIncorrectLogins = array();
-            foreach($IncorrectLogins as $IncorrectLogin){
-                if($IncorrectLogin->IP != $IP) $NewIncorrectLogins[] = $IncorrectLogin;
+            $status = 102;
+            $found = false;
+            $FailTries = 0;
+            $NewLoginStatus = array('Data'=>array(), 'LockedIP'=>array(), 'Status'=>0);
+            foreach($LoginStatus->Data as $LoginDetails){
+                $FailTries += $LoginDetails->tries;
+                if($LoginDetails->IP == $IP){
+                    $found = true;
+                    if(!$valid){
+                        $LoginDetails->ts = time();
+                        $LoginDetails->tries++;
+                    }else{
+                        continue;
+                    }
+                }
+                if($LoginDetails->tries > 3){
+                    $status = 204;
+                    $NewLoginStatus['LockedIP'][] = $LoginDetails->IP;
+                }
+                $NewLoginStatus['Data'][] = $LoginDetails;
             }
 
-            $this->SendDebug('IncorrectLogin', json_encode($NewIncorrectLogins), 0);
-            $this->WriteAttributeString('IncorrectLogin', json_encode($NewIncorrectLogins));
+            if($FailTries > 10)$status = 205;
+            $NewLoginStatus['Status'] = $status;
+    
+            if(!$found && !$valid){
+                $NewLogin['ts'] = time();
+                $NewLogin['tries'] = 1;
+                $NewLogin['IP'] = $IP;
+                $NewLoginStatus['Data'][] = $NewLogin;
+            }
+
+            $this->SendDebug('SetLoginStatus', json_encode($NewLoginStatus), 0);
+            $this->WriteAttributeString('LoginStatus', json_encode($NewLoginStatus));
+
+            $this->SetStatus($status);
         }
 	 
         #=====================================================================================
         public function ResetLock() 
         #=====================================================================================
         {
-            $this->WriteAttributeString('IncorrectLogin', '{}');
+            $this->WriteAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
             $this->SendDebug('ResetLock', 'done', 0);
-            $this->SetStatus(102);
+            if($this->ReadPropertyString('Username') == '' || $this->ReadPropertyString('Password') == ''){
+                $this->SetStatus(206);
+            }else{
+                $this->SetStatus(102);
+            }
         }
 	 
         #=====================================================================================
