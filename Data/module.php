@@ -125,7 +125,7 @@
 						$position = array('tst'=> $Payload->tst, 'lat'=> $Payload->lat, 'lon'=> $Payload->lon, 'alt'=> $Payload->alt);
 						$this->SetValue('position', json_encode($position));
 
-						$this->RegisterVariableString('place', $this->Translate('Place'));
+						$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
 						$this->SetValue('place',$this->GetAdressString());
 					}
 

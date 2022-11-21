@@ -58,7 +58,7 @@ public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
 							$position = array('lat'=> $Payload->lat, 'lon'=> $Payload->lon);
 							$this->SetValue('position', json_encode($position));
 	
-							$this->RegisterVariableString('place', $this->Translate('Place'));
+							$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
 							$this->SetValue('place',$this->GetAdressString());
 						}
 							break;
