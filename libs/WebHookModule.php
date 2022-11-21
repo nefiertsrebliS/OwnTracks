@@ -161,7 +161,7 @@ class WebHookModule extends IPSModule
             return false;
         }
 
-        return true;
+        return $LogInOk;
     }
 	 
         #=====================================================================================

@@ -1,0 +1,49 @@
+{
+    "elements":
+    [
+	    { "type": "SelectVariable", "name": "VariableID", "caption": "VariableID",  "validVariableTypes": [3] },
+		{
+			"type": "List",
+			"name": "waypoints",
+			"caption": "monitored Place",
+			"rowCount": 5,
+			"add": true,
+			"delete": true,
+			"sort": {
+				"column": "Name",
+				"direction": "ascending"
+			},
+			"columns": [{
+				"caption": "Name",
+				"name": "Name",
+				"width": "30%",
+				"add": "",
+				"edit": {
+					"type": "ValidationTextBox"
+				}
+			},{
+				"caption": "Location",
+				"name": "Location",
+                "width": "30%",
+				"add": "{\"latitude\":52.5163,\"longitude\":13.3777}",
+				"edit": {
+					"type": "SelectLocation"
+				}
+			},{
+				"caption": "Monitoring Radius",
+				"name": "Radius",
+                "width": "auto",
+				"add": 100,
+                "edit": {
+					"type": "NumberSpinner",
+                    "suffix": " m"
+				}
+			}],
+			"values": []
+		}	
+	],
+    "actions":
+    [
+    ]
+}
+

@@ -1,0 +1,11 @@
+{
+	"translations": {
+		"de": { 
+			"Distance to": "Entfernung nach",
+			"Place": "Ort",
+			"Location": "Koordinaten",
+			"Monitoring Radius": "Überwachungsradius",
+			"monitored Place": "überwachter Ort"
+		}
+	}
+}

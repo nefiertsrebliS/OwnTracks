@@ -32,6 +32,12 @@
 		<li><b>Der Hookname darf noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden</b></li>
 		<li>In der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
 	</ul> 
+	<h3>externe Daten-Instanz</h3>
+	<ul>
+		<li>Eine OwnTracks-external-Data-Instanz anlegen</li>
+		<li>VariablenID für der Positionsdaten wählen. Die Daten müssen im Format <i>{"lat":52, "lon": 10}</i> abgelegt sein.</li>
+		<li>Zu überwachende Orte mit <i>Name, Koordinaten und Überwachungsradius</i> festlegen.</li>
+	</ul> 
 	<h3>Map-Instanz</h3>
 	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. In der Konfigurationstabelle können dann alle Daten-Instanzen, die auf der Karte angezeigt werden sollen, konfiguriert werden. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.
 	<h3>Sicherung des Zugangs</h3>
@@ -83,6 +89,10 @@
 	  <tr>
 		<td>V1.06 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Bei gesperrtem Zugang werden Daten verarbeitet</td>
+	  </tr>
+	  <tr>
+		<td>V1.07 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Instanz für externe Positionsdaten</td>
 	  </tr>
 	</table>
   </body>
