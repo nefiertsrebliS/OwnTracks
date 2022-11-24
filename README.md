@@ -92,7 +92,9 @@
 	  </tr>
 	  <tr>
 		<td>V1.07 &nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td>Neu: Instanz für externe Positionsdaten</td>
+		<td>Neu: Instanz für externe Positionsdaten<br>
+			Neu: Besondere Orte auf der Karte konfigurierbar<br>
+			Fix: Formatierung HTML-Box</td>
 	  </tr>
 	</table>
   </body>

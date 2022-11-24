@@ -34,9 +34,28 @@
                         })
                     });
                     var layers = [];
-                    var icons = [];
+                    var icons = "";
                     var Markers = <?
                         $Markers = array();
+
+                        $places = json_decode($this->ReadPropertyString('Places'));
+                        array_multisort(array_column($places,'Order'), $places);
+
+                        foreach($places as $place){
+                            $color = substr("000000".dechex($place->Color),-6);
+                            $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
+                            $position = json_decode($place->Location);
+                            $place->Name = ($place->Show)?$place->Name:"";
+                    
+                            $Markers[] = array(
+                                $place->Name,
+                                $colorStr,
+                                array($position->longitude, $position->latitude),
+                                $place->Scale,
+                                $place->Location
+                            );
+                        }
+
                         $homeID = IPS_GetInstanceListByModuleID('{45E97A63-F870-408A-B259-2933F7EABF74}')[0];
                         $devices = json_decode($this->ReadPropertyString('Devices'));
                         array_multisort(array_column($devices,'Order'), $devices);
@@ -62,6 +81,7 @@
                         }
                         echo json_encode($Markers);
                     ?>;
+                    var numPlaces = <?echo count($places);?>;
 
                     let url = new URL(document.URL);
                     let icon = new URLSearchParams(url.search)==''?'?icon=':'&icon=';
@@ -100,7 +120,7 @@
                             ]
                         });
                         map.addLayer(layers[index]);
-                        icons[index] = new ol.layer.Vector({
+                        icons = new ol.layer.Vector({
                             source: new ol.source.Vector({
                                 features: [
                                     new ol.Feature({
@@ -118,21 +138,25 @@
                                 }),
                             ]
                         });
-                        map.addLayer(icons[index]);
+                        map.addLayer(icons);
                     })
             
                     map.getView().setMaxZoom(18);
                     var maxExtent = [0,0,0,0];
                     for (let i = 0; i < 2; i++) {
-                        layers.forEach(function(item) {
-                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
-                            maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
+                        layers.forEach(function(item, index) {
+                            if(index > numPlaces - 1){
+                                if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                                maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
+                            }
                         })
                     } 
                     for (let i = 2; i < 4; i++) {
-                        layers.forEach(function(item) {
-                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
-                            maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
+                        layers.forEach(function(item, index) {
+                            if(index > numPlaces - 1){
+                                if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                                maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
+                            }
                         })
                     } 
                     

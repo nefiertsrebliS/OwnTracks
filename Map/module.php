@@ -19,6 +19,7 @@ declare(strict_types=1);
             $this->RegisterPropertyString('Password', '');
             $this->RegisterPropertyString('HookName', '');
             $this->RegisterPropertyString('Devices', '{}');
+            $this->RegisterPropertyString('Places', '{}');
             $this->RegisterPropertyString('Height', '98vh');
             $this->RegisterPropertyString('Width', '100%');
             $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
@@ -80,8 +81,13 @@ declare(strict_types=1);
             if(!parent::ProcessHookData())return;
 
             if(isset($_GET['icon'])){
-                foreach(json_decode($this->ReadPropertyString('Devices')) as $device)if($device->InstanceID == $_GET['icon'])break;
-                $imgdata = base64_decode($device->Icon);
+                if(is_object(json_decode($_GET['icon']))){
+                    foreach(json_decode($this->ReadPropertyString('Places')) as $place)if($place->Location == $_GET['icon'])break;
+                    $imgdata = base64_decode($place->Icon);
+                }else{
+                    foreach(json_decode($this->ReadPropertyString('Devices')) as $device)if($device->InstanceID == $_GET['icon'])break;
+                    $imgdata = base64_decode($device->Icon);
+                }
 
                 $mimetype = $this->getImageMimeType($imgdata);
 

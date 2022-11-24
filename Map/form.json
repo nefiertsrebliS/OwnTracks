@@ -44,6 +44,87 @@
 					"type": "ValidationTextBox"
 				}
 			}, {
+				"caption": "Show Name",
+				"name": "Show",
+				"width": "10%",
+				"add": true,
+				"edit": {
+					"type": "CheckBox"
+				}
+			}, {
+				"caption": "Icon",
+				"name": "Icon",
+				"width": "10%",
+				"add": "",
+				"edit": {
+					"type": "SelectFile"
+				}
+			}, {
+				"caption": "Icon Scalefactor",
+				"name": "Scale",
+				"width": "auto",
+				"add": "",
+				"edit": {
+					"type": "NumberSpinner",
+					"digits": 2,
+					"minimum": 0.01
+				}
+			}, {
+				"caption": "Color",
+				"name": "Color",
+				"width": "10%",
+				"add": -1,
+				"edit": {
+					"type": "SelectColor"
+				}
+			}],
+			"values": []
+		},	
+		{
+			"type": "List",
+			"name": "Places",
+			"caption": "Places on the Map",
+			"rowCount": 5,
+			"add": true,
+			"delete": true,
+			"sort": {
+				"column": "Order",
+				"direction": "ascending"
+			},
+			"columns": [{
+				"caption": "Order",
+				"name": "Order",
+				"width": "10%",
+				"add": "",
+				"edit": {
+					"type": "NumberSpinner",
+					"minimum": 0
+				}
+			}, {
+				"caption": "Location",
+				"name": "Location",
+                "width": "20%",
+				"add": "{\"latitude\":52.5163,\"longitude\":13.3777}",
+				"edit": {
+					"type": "SelectLocation"
+				}
+			},{
+				"caption": "Name",
+				"name": "Name",
+				"width": "10%",
+				"add": "",
+				"edit": {
+					"type": "ValidationTextBox"
+				}
+			}, {
+				"caption": "Show Name",
+				"name": "Show",
+				"width": "10%",
+				"add": true,
+				"edit": {
+					"type": "CheckBox"
+				}
+			}, {
 				"caption": "Icon",
 				"name": "Icon",
 				"width": "10%",
