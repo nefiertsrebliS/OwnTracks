@@ -96,6 +96,11 @@
 			Neu: Besondere Orte auf der Karte konfigurierbar<br>
 			Fix: Formatierung HTML-Box</td>
 	  </tr>
+	  <tr>
+		<td>V1.08 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Device-Namen ausblenden<br>
+			Fix: Farbe transparent</td>
+	  </tr>
 	</table>
   </body>
 </html>

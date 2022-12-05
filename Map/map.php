@@ -44,6 +44,7 @@
                         foreach($places as $place){
                             $color = substr("000000".dechex($place->Color),-6);
                             $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
+                            if($place->Color == -1)$colorStr = -1;
                             $position = json_decode($place->Location);
                             $place->Name = ($place->Show)?$place->Name:"";
                     
@@ -70,6 +71,8 @@
                             }
                             $color = substr("000000".dechex($device->Color),-6);
                             $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
+                            if($device->Color == -1)$colorStr = -1;
+                            $device->Name = ($device->Show)?$device->Name:"";
                     
                             $Markers[] = array(
                                 $device->Name,
@@ -100,7 +103,7 @@
                                     image: new ol.style.Circle({
                                         radius: 4,
                                         fill: new ol.style.Fill({
-                                            color: 'rgba('+Marker[1]+',1)'
+                                            color: (Marker[1] == -1)?'rgba(0,0,0,0)':'rgba('+Marker[1]+',1)'
                                         })
                                     }),
                                     text: new ol.style.Text({
@@ -108,10 +111,10 @@
                                         font: '18px Calibri,sans-serif',
                                         text: Marker[0],
                                         fill: new ol.style.Fill({
-                                            color: 'rgb('+Marker[1]+')',
+                                            color: (Marker[1] == -1)?'rgba(0,0,0,0)':'rgba('+Marker[1]+',1)'
                                         }),
                                         stroke: new ol.style.Stroke({
-                                            color: 'rgba('+Marker[1]+',0.2)',
+                                            color: (Marker[1] == -1)?'rgba(0,0,0,0)':'rgba('+Marker[1]+',0.2)',
                                             width: 3
                                         })
                                         
