@@ -146,7 +146,7 @@
 				"caption": "Object movable",
 				"name": "Movable",
 				"width": "10%",
-				"add": true,
+				"add": false,
 				"edit": {
 					"type": "CheckBox"
 				}

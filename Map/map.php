@@ -55,7 +55,7 @@
                         array_multisort(array_column($places,'Order'), $places);
 
                         foreach($places as $place){
-                            if($place->Movable)$numMovable++;
+                            if(@$place->Movable)$numMovable++;
                             $color = substr("000000".dechex($place->Color),-6);
                             $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
                             if($place->Color == -1)$colorStr = -1;
