@@ -81,24 +81,22 @@ declare(strict_types=1);
             if(!parent::ProcessHookData())return;
 
             if(isset($_GET['icon'])){
-                if(is_object(json_decode($_GET['icon']))){
-                    foreach(json_decode($this->ReadPropertyString('Places')) as $place)if($place->Location == $_GET['icon'])break;
-                    $imgdata = base64_decode($place->Icon);
-                }else{
+                if(is_numeric($_GET['icon'])){
                     foreach(json_decode($this->ReadPropertyString('Devices')) as $device)if($device->InstanceID == $_GET['icon'])break;
                     $imgdata = base64_decode($device->Icon);
+                }else{
+                    foreach(json_decode($this->ReadPropertyString('Places')) as $place)if(md5($place->Location) == $_GET['icon'])break;
+                    $imgdata = base64_decode($place->Icon);
                 }
-
                 $mimetype = $this->getImageMimeType($imgdata);
-
                 $headhtml =  'Content-Type: image/'.$mimetype;
                 header($headhtml);
                 echo $imgdata;
+            }elseif(isset($_GET['Position'])){
+                require(__DIR__ . '/location.php');
             }else{
                 require(__DIR__ . '/map.php');
             }
-
-            
                     
         }
 	 

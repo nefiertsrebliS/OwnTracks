@@ -1,6 +1,7 @@
 {
 	"translations": {
 		"de": { 
+			"Show current Address": "Aktuelle Adresse anzeigen",
 			"Distance to": "Entfernung nach",
 			"Place": "Ort",
 			"Location": "Koordinaten",

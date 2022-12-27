@@ -4,15 +4,27 @@
                 <meta charset="utf-8">
                 <link rel="stylesheet" href="https://openlayers.org/en/v6.9.0/css/ol.css" type="text/css">
                 <style>
-                  .map {
-                    background-color: rgba(0, 0, 0, 1);
-                    margin: -3px;
-                  }
+                    .map {
+                        background-color: rgba(0, 0, 0, 1);
+                        margin: -3px;
+                    }
+
+                    .overlay {
+                        position: fixed;
+                        margin: -3px;
+                        display: none;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0,0,0,0.5);
+                        z-index: 2;
+                        cursor: pointer;
+                    }
                 </style>
                 <script src="https://openlayers.org/en/v6.9.0/build/ol.js"></script>
                 <title>OwnTracks Positionen</title>
               </head>
               <body>
+                <div class="overlay" id="overlay" onclick=OverlayOff()></div>
                 <div id="map" class="map"></div>
                 <script type="text/javascript">
                         // Resize Map
@@ -37,11 +49,13 @@
                     var icons = "";
                     var Markers = <?
                         $Markers = array();
+                        $numMovable = 0;
 
                         $places = json_decode($this->ReadPropertyString('Places'));
                         array_multisort(array_column($places,'Order'), $places);
 
                         foreach($places as $place){
+                            if($place->Movable)$numMovable++;
                             $color = substr("000000".dechex($place->Color),-6);
                             $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
                             if($place->Color == -1)$colorStr = -1;
@@ -53,7 +67,7 @@
                                 $colorStr,
                                 array($position->longitude, $position->latitude),
                                 $place->Scale,
-                                $place->Location
+                                md5($place->Location)
                             );
                         }
 
@@ -85,10 +99,11 @@
                         echo json_encode($Markers);
                     ?>;
                     var numPlaces = <?echo count($places);?>;
+                    var numMovable = <?echo $numMovable;?>;
 
                     let url = new URL(document.URL);
-                    let icon = new URLSearchParams(url.search)==''?'?icon=':'&icon=';
-
+                    let add = url.search==''?'?':'&';
+                    
                     Markers.forEach(function(Marker, index){
                         layers[index] = new ol.layer.Vector({
                             source: new ol.source.Vector({
@@ -136,7 +151,7 @@
                                     image: new ol.style.Icon({
                                         scale: Marker[3],
                                         anchor: [0.5, 1.1],
-                                        src: document.URL+icon+Marker[4]
+                                        src: document.URL+add+'icon='+Marker[4]
                                     })
                                 }),
                             ]
@@ -166,6 +181,35 @@
                     var layerExtent = layers[0].getSource().getExtent();
                     map.getView().fit(maxExtent , map.getSize());
                     map.getView().setZoom(map.getView().getZoom() * 0.98);
+
+                    map.on('click', function(evt){
+                        if(numMovable > 0){
+                            var NewPosition = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+                            if(window.innerWidth / numMovable > window.innerHeight){
+                                var height = (window.innerHeight * 0.5 > 150)?150:window.innerHeight * 0.5;
+                            }else{
+                                var height = (window.innerWidth / numMovable * 0.9 > 150)?150:window.innerWidth / numMovable * 0.9;
+                            }
+                            OverlayIframeOn(height, height * numMovable, document.URL+add+"Position="+JSON.stringify(NewPosition));
+                        }
+                    });
+
+                    //---------------------------------------------------------------------------------------------------------
+                    //		Overlays
+                    //---------------------------------------------------------------------------------------------------------
+
+                    function OverlayIframeOn(height, width, content) {
+                        var marginh = (window.innerHeight - 20 - height)/2;
+                        var marginw = (window.innerWidth -20 - width)/2;
+                        var inner = '<div style="height:'+height+'px; width:'+width+'px; margin: '+marginh+'px '+marginw+'px '+marginh+'px '+marginw+'px;"><iframe style="height: 100%; width:100%; " SRC="'+content+'"></iframe></div>';
+                        document.getElementById("overlay").style.display = "block";
+                        document.getElementById("overlay").innerHTML = inner;
+                    }
+            
+                    function OverlayOff() {
+                        document.getElementById("overlay").innerHTML = "";
+                        document.getElementById("overlay").style.display = "none";
+                    }
                 </script>
               </body>
             </html>

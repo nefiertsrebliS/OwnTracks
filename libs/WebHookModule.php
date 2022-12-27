@@ -172,16 +172,17 @@ class WebHookModule extends IPSModule
             foreach($form->elements as &$element){
                 if($element->name == "HookName"){
                     $ids = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}');
-                    $regex = '\\b(\\w+)';
+                    $regex = '';
                     if (count($ids) > 0) {
                         $hooks = json_decode(IPS_GetProperty($ids[0], 'Hooks'), true);
                         foreach ($hooks as $index => $hook) {
                             if ($hook['TargetID'] != $this->InstanceID){
                                 $word = @explode('/hook/', $hook['Hook'])[1];
-                                if($word)$regex .= '\\b(?<!^'.$word.')';
+                                if($word)$regex .= '(?!^'.$word.'$)';
                             }
                         }
                     }
+                    $regex .= '(^[a-zA-Z0-9-_]+$)';
                     $element->validate = $regex;
                 }
             }

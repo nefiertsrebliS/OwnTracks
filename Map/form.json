@@ -143,6 +143,14 @@
 					"minimum": 0.01
 				}
 			}, {
+				"caption": "Object movable",
+				"name": "Movable",
+				"width": "10%",
+				"add": true,
+				"edit": {
+					"type": "CheckBox"
+				}
+			}, {
 				"caption": "Color",
 				"name": "Color",
 				"width": "10%",

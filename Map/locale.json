@@ -15,6 +15,7 @@
 			"InstanceID":"InstanzID",
 			"Location": "Koordinaten",
 			"Show Name": "Namen anzeigen",
+			"Object movable": "Objekt bewegbar",
 			"reset lock": "Sperre zurücksetzen",
 			"connected": "verbunden",
 			"locked against unauthorized access": "gesperrt gegen unbefugten Zugriff"

@@ -2,6 +2,7 @@
     "elements":
     [
 	    { "type": "SelectVariable", "name": "VariableID", "caption": "VariableID",  "validVariableTypes": [3] },
+        { "type": "CheckBox", "name": "showAddress", "caption": "Show current Address" },
 		{
 			"type": "List",
 			"name": "waypoints",

@@ -9,6 +9,7 @@
 			parent::Create();
 
 	        $this->RegisterPropertyInteger('VariableID', 0);
+	        $this->RegisterPropertyBoolean('showAddress', true);
 			$this->RegisterPropertyString('waypoints', '{}');
 		}
 
@@ -58,10 +59,12 @@ public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
 							$position = array('lat'=> $Payload->lat, 'lon'=> $Payload->lon);
 							$this->SetValue('position', json_encode($position));
 	
-							$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
-							$this->SetValue('place',$this->GetAdressString());
+							if($this->ReadPropertyBoolean('showAddress')){
+								$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
+								$this->SetValue('place',$this->GetAddressString());
+							}
 						}
-							break;
+						break;
 					default:
 						$this->UnregisterMessage($SenderID, VM_UPDATE);
 				}
@@ -69,7 +72,7 @@ public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     }
 		
 #================================================================================================
-		private function GetAdressString() {
+		private function GetAddressString() {
 #================================================================================================
 
 			#----------------------------------------------------------------

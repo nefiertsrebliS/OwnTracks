@@ -39,7 +39,11 @@
 		<li>Zu überwachende Orte mit <i>Name, Koordinaten und Überwachungsradius</i> festlegen.</li>
 	</ul> 
 	<h3>Map-Instanz</h3>
-	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. In der Konfigurationstabelle können dann alle Daten-Instanzen, die auf der Karte angezeigt werden sollen, konfiguriert werden. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.
+	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. 
+	<h4>Geräte auf Karte</h4>
+	In der Konfigurationstabelle können alle Daten-Instanzen konfiguriert werden, die auf der Karte angezeigt werden sollen. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.
+	<h4>Orte auf Karte</h4>
+	In der unteren Konfigurationstabelle können Orte definiert werden, die auf der Karte angezeigt werden sollen. Anders als die Geräte haben die Orte feste Koordinaten, die in der Konfiguration festgelegt werden müssen. Will man Orte komfortable im Webfront verschieben, so ist das Häkchen bei  <i>Objekt bewegbar</i> zu setzen. Die übrigen Einstellungen sind analog zu den Geräten auf der Karte.
 	<h3>Sicherung des Zugangs</h3>
 	Da die Instanzen über WebHook auch aus dem Internet erreichbar sein müssen, sind diese mit <i>Benuternamen</i> und <i>Passwort</i> gesichert. Gibt man dreimal die Zugangsdaten falsch an, so wird der Zugang für diese IP gesperrt. Nach insgesamt 10 Fehlversuchen wird der Zugang für alle IPs für 24 Stunden gesperrt. Um den Zugang wieder zu entsperren, bitte in der Instanz die <i>Sperre zurücksetzen</i>-Taste drücken. 
 	<h3>Alternativer Zugang von außen mit Secret-Code statt Username und Passwort</h3>
@@ -48,6 +52,15 @@
 	Der Secret-Code kann mittels<br>
 	<i>OTR_getSecret(12345);</i><br>
 	ermittelt werden.
+	<h2>Objekte auf der Karte im Webfront bewegen</h2>
+	Ist diese Option in der Map-Instanz gewählt, so lassen sich die entsprechenden Orte wie folgt auf der Karte im Webfront bewegen:
+	<ul>
+		<li>Kurzer Mausklick oder Touch auf den Punkt in der Karte, an den ein Ort verschoben werden soll.</li>
+		<li>Jetzt erschein ein Auswahlfenster der verschiebbaren Objekte.</li>
+		<li>Kurzer Mausklick oder Touch auf das zu verschiebende Objekt.</li>
+		<li>Jetzt werden die Koordinaten vom ersten Mausklick/Touch auf das Objekt übertragen und die Karte wird mit den neuen Daten neu aufgebaut.</li>
+		<li>Mit einem kurzer Mausklick oder Touch außerhalb des Auswahlfensters lässt sich der Vorgang abbrechen.</li>
+	</ul> 
 	<h2>Lizenz</h2>
 	MIT License<br>
 	Copyright (c) 2021 nefiertsrebliS<br>
@@ -100,6 +113,12 @@
 		<td>V1.08 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Device-Namen ausblenden<br>
 			Fix: Farbe transparent</td>
+	  </tr>
+	  <tr>
+		<td>V1.09 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: RegEx für Safari<br>
+			Neu: aktuelle Adresse optional<br>
+			Neu: Orte auf Karte bewegbar</td>
 	  </tr>
 	</table>
   </body>

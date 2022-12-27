@@ -10,6 +10,7 @@
 
 	        $this->RegisterPropertyString('Topic', '');
 	        $this->RegisterPropertyBoolean('showPositionData', false);
+	        $this->RegisterPropertyBoolean('showAddress', true);
 			$this->RegisterAttributeString('waypoints', '{}');
 		}
 
@@ -125,8 +126,10 @@
 						$position = array('tst'=> $Payload->tst, 'lat'=> $Payload->lat, 'lon'=> $Payload->lon, 'alt'=> $Payload->alt);
 						$this->SetValue('position', json_encode($position));
 
-						$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
-						$this->SetValue('place',$this->GetAdressString());
+						if($this->ReadPropertyBoolean('showAddress')){
+							$this->RegisterVariableString('place', $this->Translate('Place'), '~HTMLBox');
+							$this->SetValue('place',$this->GetAddressString());
+						}
 					}
 
 				}elseif($Payload->_type == 'transition'){
@@ -171,7 +174,7 @@
 		}
 
 #================================================================================================
-		private function GetAdressString() {
+		private function GetAddressString() {
 #================================================================================================
 
 			#----------------------------------------------------------------
