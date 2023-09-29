@@ -56,7 +56,7 @@
 	Ist diese Option in der Map-Instanz gewählt, so lassen sich die entsprechenden Orte wie folgt auf der Karte im Webfront bewegen:
 	<ul>
 		<li>Kurzer Mausklick oder Touch auf den Punkt in der Karte, an den ein Ort verschoben werden soll.</li>
-		<li>Jetzt erschein ein Auswahlfenster der verschiebbaren Objekte.</li>
+		<li>Jetzt erscheint ein Auswahlfenster der verschiebbaren Objekte.</li>
 		<li>Kurzer Mausklick oder Touch auf das zu verschiebende Objekt.</li>
 		<li>Jetzt werden die Koordinaten vom ersten Mausklick/Touch auf das Objekt übertragen und die Karte wird mit den neuen Daten neu aufgebaut.</li>
 		<li>Mit einem kurzer Mausklick oder Touch außerhalb des Auswahlfensters lässt sich der Vorgang abbrechen.</li>
@@ -119,6 +119,11 @@
 		<td>Fix: RegEx für Safari<br>
 			Neu: aktuelle Adresse optional<br>
 			Neu: Orte auf Karte bewegbar</td>
+	  </tr>
+	  <tr>
+		<td>V1.10 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: iframe-Link für neue Visu<br>
+			Fix: ungenaue Topic-Trennung</td>
 	  </tr>
 	</table>
   </body>

@@ -22,7 +22,7 @@
 	        $this->ConnectParent('{73FEF334-3C55-222E-42B1-20800A4A63D0}');
 			
 #			Filter setzen
-			$Topic = '.*"Topic":"'.$this->ReadPropertyString("Topic").'.*';
+			$Topic = '.*"Topic":"'.$this->ReadPropertyString("Topic").'".*';
 			$this->SendDebug("Topic", $Topic,0);
 			$this->SetReceiveDataFilter($Topic);
 		}

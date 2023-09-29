@@ -50,7 +50,7 @@ declare(strict_types=1);
                 }
             }
 
-            $maplink = '<iframe src="./hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
+            $maplink = '<iframe src="/hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
             $this->SetValue('maplink', $maplink);
 
             //Never delete this line!
@@ -67,7 +67,7 @@ declare(strict_types=1);
                 case IM_CHANGESTATUS:
                     break;
                 case VM_UPDATE:
-                    $maplink = '<iframe src="./hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
+                    $maplink = '<iframe src="/hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
                     $this->SetValue('maplink', $maplink);
                     break;
             }
