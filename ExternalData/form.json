@@ -1,12 +1,21 @@
 {
     "elements":
     [
-	    { "type": "SelectVariable", "name": "VariableID", "caption": "VariableID",  "validVariableTypes": [3] },
-        { "type": "CheckBox", "name": "showAddress", "caption": "Show current Address" },
+        { 
+            "type": "RowLayout",
+            "items": [
+                { "type": "Label", "caption": "json-formated position" },
+				{ "type": "CheckBox", "name": "separatePosVar",	"caption": "longitude/latitude", "value": true, "onChange":  "OTR_SeparateParameter($id, $separatePosVar);"}
+            ]
+        },
+		{ "type": "SelectVariable", "name": "VariableID", "caption": "position {\"lat\":52.5,\"lon\":13.4}",  "validVariableTypes": [3] },
+		{ "type": "SelectVariable", "name": "latID", "caption": "latitude",  "validVariableTypes": [2] },
+		{ "type": "SelectVariable", "name": "lonID", "caption": "longitude",  "validVariableTypes": [2] },
+        { "type": "CheckBox", "name": "showAddress", "caption": "show current address" },
 		{
 			"type": "List",
 			"name": "waypoints",
-			"caption": "monitored Place",
+			"caption": "monitored places",
 			"rowCount": 5,
 			"add": true,
 			"delete": true,
@@ -23,7 +32,7 @@
 					"type": "ValidationTextBox"
 				}
 			},{
-				"caption": "Location",
+				"caption": "location",
 				"name": "Location",
                 "width": "30%",
 				"add": "{\"latitude\":52.5163,\"longitude\":13.3777}",
@@ -31,7 +40,7 @@
 					"type": "SelectLocation"
 				}
 			},{
-				"caption": "Monitoring Radius",
+				"caption": "monitoring radius",
 				"name": "Radius",
                 "width": "auto",
 				"add": 100,

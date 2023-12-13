@@ -33,15 +33,18 @@
 		<li>In der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
 	</ul> 
 	<h3>externe Daten-Instanz</h3>
+	Über diese Instanz können Objekte, die über externe Module wie Pado, EgiGeoZone, Geofency, MQTT und viele andere mehr getrackt werden, in Owntracks integriert und auf der Karte angezeigt werden. Einzige Voraussetzung ist, dass je eine Variable für den Längen- und den Breitengrad existiert.
 	<ul>
 		<li>Eine OwnTracks-external-Data-Instanz anlegen</li>
-		<li>VariablenID für der Positionsdaten wählen. Die Daten müssen im Format <i>{"lat":52, "lon": 10}</i> abgelegt sein.</li>
-		<li>Zu überwachende Orte mit <i>Name, Koordinaten und Überwachungsradius</i> festlegen.</li>
+		<li>Alternative 1: VariablenID mit json-formatierten Positionsdaten wählen. Die Daten müssen im Format <i>{"lat":52, "lon": 10}</i> abgelegt sein.</li>
+		<li>Alternative 2: Die Position über separate IDs für Längen- und Breitengrad aktualisieren.</li>
+		<li>Optional die zu überwachenden Orte mit <i>Name, Koordinaten und Überwachungsradius</i> festlegen.</li>
 	</ul> 
 	<h3>Map-Instanz</h3>
 	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. 
 	<h4>Geräte auf Karte</h4>
-	In der Konfigurationstabelle können alle Daten-Instanzen konfiguriert werden, die auf der Karte angezeigt werden sollen. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.
+	In der Konfigurationstabelle können alle Daten-Instanzen konfiguriert werden, die auf der Karte angezeigt werden sollen. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.<br>
+	Mit dem Häkchen bei "im Zoombereich" wird das Objekt beim Zoomen berücksichtigt.
 	<h4>Orte auf Karte</h4>
 	In der unteren Konfigurationstabelle können Orte definiert werden, die auf der Karte angezeigt werden sollen. Anders als die Geräte haben die Orte feste Koordinaten, die in der Konfiguration festgelegt werden müssen. Will man Orte komfortable im Webfront verschieben, so ist das Häkchen bei  <i>Objekt bewegbar</i> zu setzen. Die übrigen Einstellungen sind analog zu den Geräten auf der Karte.
 	<h3>Sicherung des Zugangs</h3>
@@ -124,6 +127,11 @@
 		<td>V1.10 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: iframe-Link für neue Visu<br>
 			Fix: ungenaue Topic-Trennung</td>
+	  </tr>
+	  <tr>
+		<td>V1.11 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Integration von Pado, EgiGeoZone, Geofency<br>
+			Neu: Objekte im Zoombereich auswählbar</td>
 	  </tr>
 	</table>
   </body>

@@ -93,7 +93,8 @@
                                 $colorStr,
                                 array($position->lon, $position->lat),
                                 $device->Scale,
-                                $device->InstanceID
+                                $device->InstanceID,
+                                $device->Zoom
                             );
                         }
                         echo json_encode($Markers);
@@ -135,7 +136,8 @@
                                         
                                     })
                                 }),
-                            ]
+                            ],
+                            zoom:Marker[5]
                         });
                         map.addLayer(layers[index]);
                         icons = new ol.layer.Vector({
@@ -159,11 +161,11 @@
                         map.addLayer(icons);
                     })
             
-                    map.getView().setMaxZoom(18);
+                    map.getView().setMaxZoom(21);
                     var maxExtent = [0,0,0,0];
                     for (let i = 0; i < 2; i++) {
                         layers.forEach(function(item, index) {
-                            if(index > numPlaces - 1){
+                            if((index > numPlaces - 1) && (item.A.zoom)){
                                 if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
                                 maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
                             }
@@ -171,7 +173,7 @@
                     } 
                     for (let i = 2; i < 4; i++) {
                         layers.forEach(function(item, index) {
-                            if(index > numPlaces - 1){
+                            if((index > numPlaces - 1) && (item.A.zoom)){
                                 if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
                                 maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
                             }
@@ -180,7 +182,8 @@
                     
                     var layerExtent = layers[0].getSource().getExtent();
                     map.getView().fit(maxExtent , map.getSize());
-                    map.getView().setZoom(map.getView().getZoom() * 0.98);
+                    var mapZoom = ((map.getView().getZoom()> 18)?18:map.getView().getZoom()) * 0.98;
+                    map.getView().setZoom(mapZoom);
 
                     map.on('click', function(evt){
                         if(numMovable > 0){

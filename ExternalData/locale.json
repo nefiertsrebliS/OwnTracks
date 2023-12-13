@@ -1,12 +1,17 @@
 {
 	"translations": {
 		"de": { 
-			"Show current Address": "Aktuelle Adresse anzeigen",
-			"Distance to": "Entfernung nach",
-			"Place": "Ort",
-			"Location": "Koordinaten",
-			"Monitoring Radius": "Überwachungsradius",
-			"monitored Place": "überwachter Ort"
+			"show current address": "Aktuelle Adresse anzeigen",
+			"longitude/latitude": "Längengrad/Breitengrad",
+			"json-formated position": "json-formatierte Position",
+			"position {\"lat\":52.5,\"lon\":13.4}": "Position {\"lat\":52.5,\"lon\":13.4}",
+			"latitude": "Breitengrad",
+			"longitude": "Längengrad",
+			"distance to": "Entfernung nach",
+			"place": "Ort",
+			"location": "Koordinaten",
+			"monitoring radius": "Überwachungsradius",
+			"monitored places": "überwachte Orte"
 		}
 	}
 }

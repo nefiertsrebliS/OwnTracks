@@ -136,4 +136,24 @@ declare(strict_types=1);
             }
             return false;
         }
+    
+        #=====================================================================================
+        public function SetPlaceCoordinates(string $Name, float $Longitude, float $Latitude)
+        #=====================================================================================
+        {
+            $Location = array();
+            $Location['longitude'] = $Longitude;
+            $Location['latitude'] = $Latitude;
+            $places = json_decode($this->ReadPropertyString('Places'));
+            foreach($places as &$place){
+                if($place->Name == $Name){
+                    $place->Location = json_encode($Location);
+                    # SetProperty und ApplyChanges ist erforderlich, um dem User ein Verschieben der Objekte zu ermöglichen
+                    IPS_SetProperty($this->InstanceID, 'Places', json_encode($places));
+                    IPS_ApplyChanges($this->InstanceID);
+                    return true;
+                }
+            }
+            return false;
+        }
     }

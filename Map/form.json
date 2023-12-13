@@ -70,6 +70,14 @@
 					"minimum": 0.01
 				}
 			}, {
+				"caption": "in zoom range",
+				"name": "Zoom",
+				"width": "10%",
+				"add": true,
+				"edit": {
+					"type": "CheckBox"
+				}
+			}, {
 				"caption": "Color",
 				"name": "Color",
 				"width": "10%",
