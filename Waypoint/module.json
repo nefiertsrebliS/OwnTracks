@@ -1,11 +1,11 @@
 {
-	"id": "{8398750C-51CE-51C8-97A9-9356BB11ABDD}",
-	"name": "OwnTrackData",
+	"id": "{CD87C801-7B1D-AB72-F27E-BE2575A45C77}",
+	"name": "OwnTrackWaypoint",
 	"type": 3,
 	"vendor": "OwnTracks",
 	"aliases": 
 	[
-		"OwnTracks Data"
+		"OwnTracks Waypoint"
 	],
 	"parentRequirements": ["{7F97470D-E237-1B79-0BF9-6D859E1066A9}"],
 	"childRequirements": [],

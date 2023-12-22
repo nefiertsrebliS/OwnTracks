@@ -1,0 +1,12 @@
+{
+    "elements":
+    [
+		{ "type": "ValidationTextBox", "name": "Name", "caption": "Waypoint Name" },
+        { "type": "CheckBox", "name": "showPositionData", "caption": "Show Position Data" },
+        { "type": "CheckBox", "name": "showAddress", "caption": "Show current Address" }
+	],
+    "actions":
+    [
+    ]
+}
+

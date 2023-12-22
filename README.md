@@ -32,6 +32,20 @@
 		<li><b>Der Hookname darf noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden</b></li>
 		<li>In der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
 	</ul> 
+	<h3>Wegpunkt-Instanz</h3>
+	Die Wegpunkt-Instanz kann dafür genutzt werden, um
+	<ul>
+		<li>bewegliche Wegpunkte über Beacons zu orten. Dabei funktioniert die Ortung mit allen Geräten, die mit dem übergeordneten OwnTracks-Hook verbunden sind. Befindet sich ein Smartphone in der Reichweite eines in der Owntracks-App eingerichteten Beacons, so wird die Position des Beacons auf die Position des Smartphones gesetzt. Dies geschieht letztmalig, wenn der Kontakt zwischen Smartphone und Beacon abbricht.</li>
+		<li>übersichtlich darzustellen, welche mit dem übergeordneten OwnTracks-Hook verbundenen Geräte sich aktuell im Bereich des Wegpunktes/der Region aufhalten. Dazu muss der Wegpunkt auf allen Geräten den gleichen Namen haben. Betritt oder verlässt ein Gerät den Bereich des Wegpunktes, so wird die Anwesenheit in der Wegpunkt-Instanz aktualisiert.</li>
+	</ul> 
+	Für die Einrichtung ist folgendes zu tun:
+	<ul>
+		<li>Eine OwnTracks-Waypoint-Instanz anlegen</li>
+		<li>Den Namen des zu überwachenden Wegpunkts festlegen</li>
+		<li>Festlegen, ob Positionsdaten und die Adresse angezeigt werden sollen</li>
+		<li>Bei <b>beweglichen Beacons</b> in der OwnTracks-App den Überwachungsradius auf "-1" stellen!</li>
+		<li>Danach in der OwnTracks-App unter <i>Einstellungen</i> die Taste <i>Sende Regionen</i> drücken.</li>
+	</ul> 
 	<h3>externe Daten-Instanz</h3>
 	Über diese Instanz können Objekte, die über externe Module wie Pado, EgiGeoZone, Geofency, MQTT und viele andere mehr getrackt werden, in Owntracks integriert und auf der Karte angezeigt werden. Einzige Voraussetzung ist, dass je eine Variable für den Längen- und den Breitengrad existiert.
 	<ul>
@@ -43,7 +57,7 @@
 	<h3>Map-Instanz</h3>
 	Zusätzlich zur Data-Instanz kann eine Map-Instanz angelegt werden. Auch diese wird mit <i>Hookname</i>, <i>UserID</i> und <i>Password</i> konfiguriert. Der Hookname darf wie oben noch nicht in Verwendung sein, muss sich also von allen bisherigen Hooknamen unterscheiden. Darüber hinaus muss eingestellt werden, wie groß die Karte im WebFront erscheinen soll. 
 	<h4>Geräte auf Karte</h4>
-	In der Konfigurationstabelle können alle Daten-Instanzen konfiguriert werden, die auf der Karte angezeigt werden sollen. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.<br>
+	In der Konfigurationstabelle können alle Daten- und Wegpunkt-Instanzen konfiguriert werden, die auf der Karte angezeigt werden sollen. Dabei können neben Anzeigename und -farbe auch ein persönliches Icon gewählt und dessen Darstellungsgröße eingestellt werden. Mit der Reihenfolge wird festgelegt, welches Icon auf der Karte zu oberst liegt, wenn diese sich überschneiden. Zusätzlich zu den Daten-Instanzen von OwnTracks kann auch die Location aus den Kern-Instanzen als "zuhause" angezeigt werden.<br>
 	Mit dem Häkchen bei "im Zoombereich" wird das Objekt beim Zoomen berücksichtigt.
 	<h4>Orte auf Karte</h4>
 	In der unteren Konfigurationstabelle können Orte definiert werden, die auf der Karte angezeigt werden sollen. Anders als die Geräte haben die Orte feste Koordinaten, die in der Konfiguration festgelegt werden müssen. Will man Orte komfortable im Webfront verschieben, so ist das Häkchen bei  <i>Objekt bewegbar</i> zu setzen. Die übrigen Einstellungen sind analog zu den Geräten auf der Karte.
@@ -132,6 +146,10 @@
 		<td>V1.11 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Neu: Integration von Pado, EgiGeoZone, Geofency<br>
 			Neu: Objekte im Zoombereich auswählbar</td>
+	  </tr>
+	  <tr>
+		<td>V1.12 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Instanz für Wegpunkte und bewegliche Beacons</td>
 	  </tr>
 	</table>
   </body>

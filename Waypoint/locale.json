@@ -1,0 +1,12 @@
+{
+	"translations": {
+		"de": { 
+			"Waypoint Name": "Ortsname",
+			"Show Position Data": "Positionsdaten anzeigen",
+			"Show current Address": "Aktuelle Adresse anzeigen",
+			"Distance to": "Entfernung nach",
+			"Place": "Ort",
+			"unknown": "unbekannt"
+		}
+	}
+}

@@ -3,9 +3,10 @@
 	class OwnTrackData extends IPSModule
 	{
 
-#================================================================================================
-		public function Create() {
-#================================================================================================
+		#================================================================================================
+		public function Create()
+		#================================================================================================
+		{
 			parent::Create();
 
 	        $this->RegisterPropertyString('Topic', '');
@@ -14,31 +15,32 @@
 			$this->RegisterAttributeString('waypoints', '{}');
 		}
 
-#================================================================================================
-		public function ApplyChanges() {
-#================================================================================================
+		#================================================================================================
+		public function ApplyChanges()
+		#================================================================================================
+		{
 		    parent::ApplyChanges();
 			//Connect to available splitter or create a new one
 	        $this->ConnectParent('{73FEF334-3C55-222E-42B1-20800A4A63D0}');
 			
-#			Filter setzen
+			#	Filter setzen
 			$Topic = '.*"Topic":"'.$this->ReadPropertyString("Topic").'("|/).*';
 			$this->SendDebug("Topic", $Topic,0);
 			$this->SetReceiveDataFilter($Topic);
 		}
 		
-#================================================================================================
+		#================================================================================================
 		public function ReceiveData($JSONString)
-#================================================================================================
+		#================================================================================================
 		{
 			$this->SendDebug("Received", $JSONString, 0);
 
 			$data = json_decode($JSONString);
 			$this->SendDebug("Received Payload", json_encode($data->Payload), 0);
 
-#----------------------------------------------------------------
-#		Weiterleitung an die Variablen
-#----------------------------------------------------------------
+			#----------------------------------------------------------------
+			#		Weiterleitung an die Variablen
+			#----------------------------------------------------------------
 
 			$Payload = $data->Payload;
 			if(isset($Payload->_type)){
@@ -93,16 +95,25 @@
 						$Idents = array();
 						foreach(IPS_GetChildrenIDs($this->InstanceID) as $wpID)$Idents[$wpID] = IPS_GetObject($wpID)['ObjectIdent'];
 						foreach($waypoints as $rid=>$waypoint) if(!array_search($rid, $Idents))unset($waypoints->$rid);
-						$this->SendDebug('Waypoints', json_encode($waypoints), 0);
-						$this->WriteAttributeString('waypoints', json_encode($waypoints));
 
-						foreach($waypoints as $waypoint){
+						foreach($waypoints as &$waypoint){
 							if(isset($waypoint->rid) && isset($waypoint->desc)){
 								$entry = (array_search($waypoint->rid, $Payload->inrids) !== false)?true:false;
 								$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
 								if($entry != $this->GetValue($waypoint->rid)) $this->SetValue($waypoint->rid,$entry);
+								if($entry){
+									if(isset($Payload->lon) && isset($Payload->lat) && isset($Payload->tst) && $this->ReadPropertyBoolean('showPositionData')){
+										if(isset($waypoint->rad) && $waypoint->rad < 0){
+											$waypoint->lon = $Payload->lon;
+											$waypoint->lat = $Payload->lat;
+										}
+									}
+								}
 							}
 						}
+
+						$this->SendDebug('Waypoints', json_encode($waypoints), 0);
+						$this->WriteAttributeString('waypoints', json_encode($waypoints));
 					}
 
 					if(isset($Payload->lon) && isset($Payload->lat) && isset($Payload->alt) && isset($Payload->tst) && $this->ReadPropertyBoolean('showPositionData')){
@@ -135,23 +146,37 @@
 				}elseif($Payload->_type == 'transition'){
 
 					if(isset($Payload->event) && isset($Payload->desc)){
-						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
+						$Payload = $this->GetWaypointData($Payload);
 						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
 						$entry = ($Payload->event == 'enter')?true:false;
 						$this->SetValue($Payload->rid, $entry);
+						if($entry){
+							if(isset($Payload->lon) && isset($Payload->lat) && isset($Payload->tst) && $this->ReadPropertyBoolean('showPositionData')){
+								$rid = $Payload->rid;
+								$waypoints = json_decode($this->ReadAttributeString('waypoints'));
+								if(isset($waypoints->$rid->rad) && $waypoints->$rid->rad < 0){
+									$waypoints->$rid->lon = $Payload->lon;
+									$waypoints->$rid->lat = $Payload->lat;
+									$this->WriteAttributeString('waypoints', json_encode($waypoints));
+									$this->SendDebug("Waypoints", $this->ReadAttributeString('waypoints'), 0);
+								}
+							}
+						}
 					}
 
 				}elseif($Payload->_type == 'waypoint'){
 
 					if(isset($Payload->desc) && isset($Payload->lon) && isset($Payload->lat)){
-						if(!isset($Payload->rid))$Payload->rid = md5($Payload->desc);
-						$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
-
-						$waypoints = json_decode($this->ReadAttributeString('waypoints'));
-						$rid = $Payload->rid;
-						if(!property_exists($waypoints, $rid)) $waypoints->$rid = $Payload;
-						$this->WriteAttributeString('waypoints', json_encode($waypoints));
-						$this->SendDebug("Waypoints", $this->ReadAttributeString('waypoints'), 0);
+						if(strpos($Payload->desc, "follow") === false){
+							$Payload = $this->GetWaypointData($Payload);
+							$this->RegisterVariableBoolean($Payload->rid, $Payload->desc,'~Presence',100);
+	
+							$waypoints = json_decode($this->ReadAttributeString('waypoints'));
+							$rid = $Payload->rid;
+							$waypoints->$rid = $Payload;
+							$this->WriteAttributeString('waypoints', json_encode($waypoints));
+							$this->SendDebug("Waypoints", $this->ReadAttributeString('waypoints'), 0);
+						}
 					}
 
 				}elseif($Payload->_type == 'waypoints'){
@@ -160,10 +185,12 @@
 						$waypoints = new class{};
 						foreach($Payload->waypoints as $waypoint){
 							if(isset($waypoint->desc) && isset($waypoint->lon) && isset($waypoint->lat)){
-								if(!isset($waypoint->rid))$waypoint->rid = md5($waypoint->desc);
-								$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
-								$rid = $waypoint->rid;
-								if(!property_exists($waypoints, $rid)) $waypoints->$rid = $waypoint;
+								if(strpos($waypoint->desc, "follow") === false){
+									$waypoint = $this->GetWaypointData($waypoint);
+									$this->RegisterVariableBoolean($waypoint->rid, $waypoint->desc,'~Presence',100);
+									$rid = $waypoint->rid;
+									$waypoints->$rid = $waypoint;	
+								}
 							}
 						}
 						$this->WriteAttributeString('waypoints', json_encode($waypoints));
@@ -173,9 +200,10 @@
 			}
 		}
 
-#================================================================================================
-		private function GetAddressString() {
-#================================================================================================
+		#================================================================================================
+		private function GetAddressString()
+		#================================================================================================
+		{
 
 			#----------------------------------------------------------------
 			#		Adresse von OSM holen
@@ -200,14 +228,40 @@
 			return $place;
 		}
 
-#================================================================================================
-        public function RequestAction($Ident, $Value) {
-#================================================================================================
-            switch($Ident) {
-                default:
-                    throw new Exception("Invalid Ident");
-            }
-         
-        }
+		#================================================================================================
+		public function RequestAction($Ident, $Value)
+		#================================================================================================
+		{
+			switch($Ident) {
+				default:
+					throw new Exception("Invalid Ident");
+			}
+		}
+
+		#================================================================================================
+		private function GetWaypointData($payload)
+		#================================================================================================
+		{
+			#----------------------------------------------------------------
+			#		Waypoint formatieren
+			#----------------------------------------------------------------
+
+			if(isset($payload->desc)){
+				if(strpos($payload->desc, ":") !== false){
+					$desc = explode(":",$payload->desc);
+					$payload->desc = $desc[0];
+					if(count(explode("-", $desc[1])) == 5 && strlen($desc[1]) == 35){
+						$payload->uuid = $desc[1];
+						$nr = 2;
+					}else{
+						$nr = 1;
+					}
+					if(isset($desc[$nr])) $payload->major = $desc[$nr];
+					if(isset($desc[$nr + 1])) $payload->minor = $desc[$nr + 1];
+				}
+				if(!isset($payload->rid))$payload->rid = md5($payload->desc);
+			}
+			return $payload;
+		}
 	}
 ?>
