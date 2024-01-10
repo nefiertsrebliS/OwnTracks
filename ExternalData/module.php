@@ -3,9 +3,10 @@
 	class ExternalData extends IPSModule
 	{
 
-#================================================================================================
-		public function Create() {
-#================================================================================================
+		#================================================================================================
+		public function Create()
+		#================================================================================================
+		{
 			parent::Create();
 
 	        $this->RegisterPropertyBoolean('separatePosVar', false);
@@ -18,9 +19,10 @@
 			if($this->GetValue('position') == '') $this->SetValue('position', '{"lat":52.5163,"lon":13.3777}');
 		}
 
-#================================================================================================
-		public function ApplyChanges() {
-#================================================================================================
+		#================================================================================================
+		public function ApplyChanges()
+		#================================================================================================
+		{
 		    parent::ApplyChanges();
 			
 			if($this->ReadPropertyBoolean('separatePosVar')){
@@ -34,61 +36,62 @@
 			}
 		}
 
-#================================================================================================
-public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-#================================================================================================
-    {
-        switch ($Message) {
-		    case IM_CHANGESTATUS:
-		        break;
-		    case VM_UPDATE:
-				switch($SenderID){
-					case $this->ReadPropertyInteger('VariableID'):
-						$this->SendDebug($this->ReadPropertyInteger('VariableID'), $Data[0], 0);
-						$Payload = json_decode($Data[0]);
-						if(isset($Payload->lon) && isset($Payload->lat)){
+		#================================================================================================
+		public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+		#================================================================================================
+		{
+			switch ($Message) {
+				case IM_CHANGESTATUS:
+					break;
+				case VM_UPDATE:
+					switch($SenderID){
+						case $this->ReadPropertyInteger('VariableID'):
+							$this->SendDebug($this->ReadPropertyInteger('VariableID'), $Data[0], 0);
+							$Payload = json_decode($Data[0]);
+							if(isset($Payload->lon) && isset($Payload->lat)){
+								$value = $this->GetValue('position');
+								if($value == '') $value = '{"lat":0, "lon":0}';
+								$position = json_decode($value);
+								$position->lat = $Payload->lat;
+								$position->lon = $Payload->lon;
+		
+								$this->SetValue('position', json_encode($position));
+								$this->CheckPosition();
+							}
+							break;
+						case $this->ReadPropertyInteger('latID'):
+							$this->SendDebug($this->ReadPropertyInteger('latID'), $Data[0], 0);
+
 							$value = $this->GetValue('position');
 							if($value == '') $value = '{"lat":0, "lon":0}';
 							$position = json_decode($value);
-							$position->lat = $Payload->lat;
-							$position->lon = $Payload->lon;
-	
+							$position->lat = $Data[0];
+
 							$this->SetValue('position', json_encode($position));
 							$this->CheckPosition();
-						}
-						break;
-					case $this->ReadPropertyInteger('latID'):
-						$this->SendDebug($this->ReadPropertyInteger('latID'), $Data[0], 0);
+							break;
+						case $this->ReadPropertyInteger('lonID'):
+							$this->SendDebug($this->ReadPropertyInteger('lonID'), $Data[0], 0);
 
-						$value = $this->GetValue('position');
-						if($value == '') $value = '{"lat":0, "lon":0}';
-						$position = json_decode($value);
-						$position->lat = $Data[0];
+							$value = $this->GetValue('position');
+							if($value == '') $value = '{"lat":0, "lon":0}';
+							$position = json_decode($value);
+							$position->lon = $Data[0];
 
-						$this->SetValue('position', json_encode($position));
-						$this->CheckPosition();
-						break;
-					case $this->ReadPropertyInteger('lonID'):
-						$this->SendDebug($this->ReadPropertyInteger('lonID'), $Data[0], 0);
+							$this->SetValue('position', json_encode($position));
+							$this->CheckPosition();
+							break;
 
-						$value = $this->GetValue('position');
-						if($value == '') $value = '{"lat":0, "lon":0}';
-						$position = json_decode($value);
-						$position->lon = $Data[0];
-
-						$this->SetValue('position', json_encode($position));
-						$this->CheckPosition();
-						break;
-
-					default:
-						$this->UnregisterMessage($SenderID, VM_UPDATE);
-				}
-        }
-    }
+						default:
+							$this->UnregisterMessage($SenderID, VM_UPDATE);
+					}
+			}
+		}
 		
-#================================================================================================
-		private function GetAddressString() {
-#================================================================================================
+		#================================================================================================
+		private function GetAddressString()
+		#================================================================================================
+		{
 
 			#----------------------------------------------------------------
 			#		Adresse von OSM holen
