@@ -151,6 +151,10 @@
 		<td>V1.12 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Neu: Instanz für Wegpunkte und bewegliche Beacons</td>
 	  </tr>
+	  <tr>
+		<td>V1.13 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: ungültiger Statuscode</td>
+	  </tr>
 	</table>
   </body>
 </html>

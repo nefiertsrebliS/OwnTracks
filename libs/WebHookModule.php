@@ -116,14 +116,6 @@ class WebHookModule extends IPSModule
         #---------------------------------------------------------
         #   Login authorized?
         #---------------------------------------------------------
-
-        #   kein Username oder Passwort gesetzt
-        if ($this->GetStatus() == 206) {
-            $this->LogMessage("Username or Password not set! Please set Username and Password to process data!", KL_ERROR);
-            header('HTTP/1.0 423 Locked');
-            echo 'Page locked';
-            return false;
-        }
         
         #   Instanz blockiert
         if ($this->GetStatus() == 205) {
@@ -269,11 +261,7 @@ class WebHookModule extends IPSModule
         {
             $this->WriteAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
             $this->SendDebug('ResetLock', 'done', 0);
-            if($this->ReadPropertyString('Username') == '' || $this->ReadPropertyString('Password') == ''){
-                $this->SetStatus(206);
-            }else{
-                $this->SetStatus(102);
-            }
+            $this->SetStatus(102);
         }
 	 
         #=====================================================================================

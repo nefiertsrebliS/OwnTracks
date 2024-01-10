@@ -19,7 +19,8 @@
 			"reset lock": "Sperre zurücksetzen",
 			"in zoom range": "im Zoombereich",
 			"connected": "verbunden",
-			"locked against unauthorized access": "gesperrt gegen unbefugten Zugriff"
+			"IP locked against unauthorized access": "IP gesperrt gegen unbefugten Zugriff",
+			"Instance locked against unauthorized access": "Instance gesperrt gegen unbefugten Zugriff"
 		}
 	}
 }
