@@ -5,7 +5,7 @@
             "type": "RowLayout",
             "items": [
                 { "type": "Label", "caption": "json-formated position" },
-				{ "type": "CheckBox", "name": "separatePosVar",	"caption": "longitude/latitude", "value": true, "onChange":  "OTR_SeparateParameter($id, $separatePosVar);"}
+				{ "type": "CheckBox", "name": "separatePosVar",	"caption": "longitude/latitude", "value": true, "onChange":  "IPS_RequestAction($id, \"SeparateParameter\", $separatePosVar);"}
             ]
         },
 		{ "type": "SelectVariable", "name": "VariableID", "caption": "position {\"lat\":52.5,\"lon\":13.4}",  "validVariableTypes": [3] },

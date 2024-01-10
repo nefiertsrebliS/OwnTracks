@@ -152,7 +152,7 @@
 		}
         
 		#================================================================================================
-		public function SeparateParameter(bool $separate)
+		private function SeparateParameter(bool $separate)
 		#================================================================================================
 		{
 			if($separate){
@@ -182,14 +182,18 @@
 			return json_encode($form);
 		}
 	
-#================================================================================================
-        public function RequestAction($Ident, $Value) {
-#================================================================================================
-            switch($Ident) {
-                default:
-                    throw new Exception("Invalid Ident");
-            }
+		#================================================================================================
+		public function RequestAction($Ident, $Value)
+		#================================================================================================
+		{
+			switch($Ident) {
+				case "SeparateParameter":
+					$this->SeparateParameter($Value);
+					break;
+				default:
+					throw new Exception("Invalid Ident");
+			}
          
-        }
+		}
 	}
 ?>
