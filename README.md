@@ -155,6 +155,10 @@
 		<td>V1.13 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: ungültiger Statuscode</td>
 	  </tr>
+	  <tr>
+		<td>V1.14 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Kartendrehung erlauben/unterbinden</td>
+	  </tr>
 	</table>
   </body>
 </html>

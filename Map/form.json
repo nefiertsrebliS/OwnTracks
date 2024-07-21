@@ -6,6 +6,7 @@
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
 		{ "name": "Height", "type": "ValidationTextBox", "caption": "Height of Map" },
 		{ "name": "Width", "type": "ValidationTextBox", "caption": "Width of Map" },
+		{ "name": "AllowMapRotation", "type": "CheckBox", "caption": "Allow map rotation" },
 		{
 			"type": "List",
 			"name": "Devices",

@@ -22,6 +22,7 @@ declare(strict_types=1);
             $this->RegisterPropertyString('Places', '{}');
             $this->RegisterPropertyString('Height', '98vh');
             $this->RegisterPropertyString('Width', '100%');
+            $this->RegisterPropertyBoolean('AllowMapRotation', false);
             $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
             $this->RegisterVariableString('maplink', 'Map', '~HTMLBox');
         }

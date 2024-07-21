@@ -42,7 +42,8 @@
             ],
             view: new ol.View({
                     center: ol.proj.fromLonLat([11.41, 52.82]),
-                    zoom: 10
+                    zoom: 10,
+                    enableRotation: <?echo ($this->ReadPropertyBoolean("AllowMapRotation"))?"true":"false";?>
             })
         });
         var layers = [];
