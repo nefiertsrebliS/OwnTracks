@@ -159,6 +159,11 @@
 		<td>V1.14 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Neu: Kartendrehung erlauben/unterbinden</td>
 	  </tr>
+	  <tr>
+		<td>V1.15 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Karte wird nicht mehr bei jeder Positionsänderung neu aufgebaut<br>
+			Fix: bessere Kompartibilität durch neue OpenLayer-Version</td>
+	  </tr>
 	</table>
   </body>
 </html>

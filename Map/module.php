@@ -68,8 +68,9 @@ declare(strict_types=1);
                 case IM_CHANGESTATUS:
                     break;
                 case VM_UPDATE:
-                    $maplink = '<iframe src="/hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
-                    $this->SetValue('maplink', $maplink);
+                    $hookID = IPS_GetInstanceListByModuleID('{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}')[0];
+                    $Data["id"]= IPS_GetParent($SenderID);
+                    WC_PushMessage($hookID, '/hook/map', json_encode($Data));
                     break;
             }
         }
@@ -80,6 +81,8 @@ declare(strict_types=1);
         {
             //Never delete this line!
             if(!parent::ProcessHookData())return;
+
+            $this->SendDebug(__FUNCTION__, json_encode($_GET), 0);
 
             if(isset($_GET['icon'])){
                 if(is_numeric($_GET['icon'])){
@@ -96,11 +99,74 @@ declare(strict_types=1);
             }elseif(isset($_GET['Position'])){
                 require(__DIR__ . '/location.php');
             }else{
-                require(__DIR__ . '/map.php');
+                echo $this->GetMapData();
             }
                     
         }
-	 
+
+        #=====================================================================================
+        private function GetMapData()
+        #=====================================================================================
+        {
+            $map = file_get_contents(__DIR__ . '/map.php');
+            $map = str_replace('enableRotation: false   // Replace Hook', 'enableRotation: '.($this->ReadPropertyBoolean("AllowMapRotation")?"true":"false"), $map);
+
+            $Markers = array();
+            $numMovable = 0;
+
+            $places = json_decode($this->ReadPropertyString('Places'));
+            array_multisort(array_column($places,'Order'), $places);
+
+            foreach($places as $place){
+                if(@$place->Movable)$numMovable++;
+                $color = substr("000000".dechex($place->Color),-6);
+                $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
+                if($place->Color == -1)$colorStr = -1;
+                $position = json_decode($place->Location);
+                $place->Name = ($place->Show)?$place->Name:"";
+        
+                $Markers[] = array(
+                    "name"=>$place->Name,
+                    "color"=>$colorStr,
+                    "position"=>array($position->longitude, $position->latitude),
+                    "scale"=>$place->Scale,
+                    "id"=>md5($place->Location),
+                    "zoom"=>false
+                );
+            }
+
+            $homeID = IPS_GetInstanceListByModuleID('{45E97A63-F870-408A-B259-2933F7EABF74}')[0];
+            $devices = json_decode($this->ReadPropertyString('Devices'));
+            array_multisort(array_column($devices,'Order'), $devices);
+
+            foreach($devices as $device){
+                if($device->InstanceID == $homeID){
+                    $position = json_decode(IPS_GetProperty($homeID, 'Location'));
+                    $position->lat = $position->latitude;
+                    $position->lon = $position->longitude;
+                }else{
+                    $position = json_decode(GetValue(IPS_GetObjectIDByIdent('position', $device->InstanceID)));
+                }
+                $color = substr("000000".dechex($device->Color),-6);
+                $colorStr = hexdec(substr($color,0, 2)).','.hexdec(substr($color,2, 2)).','.hexdec(substr($color,4, 2));
+                if($device->Color == -1)$colorStr = -1;
+                $device->Name = ($device->Show)?$device->Name:"";
+        
+                $Markers[] = array(
+                    "name"=>$device->Name,
+                    "color"=>$colorStr,
+                    "position"=>array($position->lon, $position->lat),
+                    "scale"=>$device->Scale,
+                    "id"=>$device->InstanceID,
+                    "zoom"=>$device->Zoom
+                );
+            }
+            $map = str_replace('var Markers = [];  // Replace Hook', 'var Markers = '.json_encode($Markers).';', $map);
+            $map = str_replace('var numMovable = 0;  // Replace Hook', 'var numMovable = '.$numMovable.';', $map);
+
+            return $map;
+        }
+         
         #=====================================================================================
         public function GetConfigurationForm() 
         #=====================================================================================
