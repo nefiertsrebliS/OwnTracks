@@ -23,6 +23,7 @@ declare(strict_types=1);
             $this->RegisterPropertyString('Height', '98vh');
             $this->RegisterPropertyString('Width', '100%');
             $this->RegisterPropertyBoolean('AllowMapRotation', false);
+            $this->RegisterPropertyBoolean('AllowMapAutoZoom', true);
             $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
             $this->RegisterVariableString('maplink', 'Map', '~HTMLBox');
         }
@@ -110,6 +111,7 @@ declare(strict_types=1);
         {
             $map = file_get_contents(__DIR__ . '/map.php');
             $map = str_replace('enableRotation: false   // Replace Hook', 'enableRotation: '.($this->ReadPropertyBoolean("AllowMapRotation")?"true":"false"), $map);
+            $map = str_replace('var enableAutoZoom = true;   // Replace Hook', 'var enableAutoZoom = '.($this->ReadPropertyBoolean("AllowMapAutoZoom")?"true;":"false;"), $map);
 
             $Markers = array();
             $numMovable = 0;

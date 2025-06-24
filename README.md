@@ -161,7 +161,7 @@
 	  </tr>
 	  <tr>
 		<td>V1.15 &nbsp;&nbsp;&nbsp;&nbsp;</td>
-		<td>Neu: Karte wird nicht mehr bei jeder Positionsänderung neu aufgebaut<br>
+		<td>Neu: Karte wird optional nicht mehr bei jeder Positionsänderung neu aufgebaut <br>
 			Fix: bessere Kompartibilität durch neue OpenLayer-Version</td>
 	  </tr>
 	</table>

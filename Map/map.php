@@ -32,6 +32,8 @@
         document.getElementById("map").style.height = (window.innerHeight-10)+"px";
         document.getElementById("map").style.width = (window.innerWidth-10)+"px";
 
+        var enableAutoZoom = true;   // Replace Hook
+
         var map = new ol.Map({
             target: 'map',
             layers: [
@@ -167,6 +169,31 @@
                     icons[index].setSource(source);
                 }
             });
+
+            if(enableAutoZoom){
+                var maxExtent = [0,0,0,0];
+                for (let i = 0; i < 2; i++) {
+                    layers.forEach(function(item, index) {
+                        if(item.values_.zoom){
+                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                            maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
+                        }
+                    })
+                } 
+                for (let i = 2; i < 4; i++) {
+                    layers.forEach(function(item, index) {
+                        if(item.values_.zoom){
+                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                            maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
+                        }
+                    })
+                } 
+                console.log(map.getView().getProperties());
+                console.log(map.getProperties());
+                map.getView().fit(maxExtent , map.getSize());
+                var mapZoom = ((map.getView().getZoom()> 18)?18:map.getView().getZoom()) * 0.98;
+                map.getView().setZoom(mapZoom);
+            }
 
         });
 
