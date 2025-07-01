@@ -164,6 +164,10 @@
 		<td>Neu: Karte wird optional nicht mehr bei jeder Positionsänderung neu aufgebaut <br>
 			Fix: bessere Kompartibilität durch neue OpenLayer-Version</td>
 	  </tr>
+	  <tr>
+		<td>V1.16 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Aktualisierung der Karte hat unter Umständen nicht funktioniert</td>
+	  </tr>
 	</table>
   </body>
 </html>
