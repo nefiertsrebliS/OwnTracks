@@ -81,6 +81,25 @@
 								$this->RegisterVariableInteger($key, $this->Translate('Chargestatus'), 'Chargestatus.OTR',0);
 								$this->SetValue($key, $data);
 								break;
+							case 'motionactivities':
+								if (!IPS_VariableProfileExists('MotionActivities.OTR')) {
+									IPS_CreateVariableProfile('MotionActivities.OTR', 1);
+									IPS_SetVariableProfileIcon('MotionActivities.OTR', 'Motion');
+									IPS_SetVariableProfileValues('MotionActivities.OTR', 0, 5, 1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 0, $this->Translate('unknown'), '', -1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 1, $this->Translate('stationary'), '', -1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 2, $this->Translate('walking'), '', -1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 3, $this->Translate('running'), '', -1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 4, $this->Translate('cycling'), '', -1);
+									IPS_SetVariableProfileAssociation('MotionActivities.OTR', 5, $this->Translate('automotive'), '', -1);
+								}
+								$this->RegisterVariableInteger($key, $this->Translate('Activity'), 'MotionActivities.OTR',0);
+								$result = 0;
+								foreach($data as $activity){
+									$result = max($result, array_search($activity, ["unknown", "stationary", "walking", "running", "cycling", "automotive"]));
+								}
+								$this->SetValue($key, $result);
+								break;
 						}
 
 					}

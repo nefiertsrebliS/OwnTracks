@@ -168,6 +168,10 @@
 		<td>V1.16 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Aktualisierung der Karte hat unter Umständen nicht funktioniert</td>
 	  </tr>
+	  <tr>
+		<td>V1.17 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Aktivität (nur IOS)</td>
+	  </tr>
 	</table>
   </body>
 </html>

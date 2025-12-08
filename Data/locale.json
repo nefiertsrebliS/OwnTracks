@@ -15,7 +15,13 @@
 			"charging": "lädt",
 			"full": "vollständig geladen",
 			"Battery": "Batterie",
-			"Airpressure": "Luftdruck"
+			"Airpressure": "Luftdruck",
+			"Activity": "Aktivität",
+			"stationary": "stehen",
+			"walking": "gehen",
+			"running": "laufen",
+			"cycling": "Rad fahren",
+			"automotive": "Auto fahren"
 		}
 	}
 }
