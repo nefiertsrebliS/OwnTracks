@@ -22,7 +22,8 @@
 			"in zoom range": "im Zoombereich",
 			"connected": "verbunden",
 			"IP locked against unauthorized access": "IP gesperrt gegen unbefugten Zugriff",
-			"Instance locked against unauthorized access": "Instance gesperrt gegen unbefugten Zugriff"
+			"Instance locked against unauthorized access": "Instance gesperrt gegen unbefugten Zugriff",
+			"UserID or Password no set": "BenutzerID oder Passwort nicht gesetzt"
 		}
 	}
 }

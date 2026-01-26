@@ -172,6 +172,11 @@
 		<td>V1.17 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Neu: Aktivität (nur IOS)</td>
 	  </tr>
+	  <tr>
+		<td>V2.00 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Umstellung auf IPSModuleStrict<br>
+			Fix: Aktualisierung der Karte nach Unterbrechung der Server-Verbindung</td>
+	  </tr>
 	</table>
   </body>
 </html>

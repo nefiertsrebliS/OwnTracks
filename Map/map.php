@@ -27,11 +27,14 @@
     <div class="overlay" id="overlay" onclick=OverlayOff()></div>
     <div id="map" class="map"></div>
     <script type="text/javascript">
+        var reConnectInterval;
+
         // Resize Map
 
         document.getElementById("map").style.height = (window.innerHeight-10)+"px";
         document.getElementById("map").style.width = (window.innerWidth-10)+"px";
 
+        var socketOpen = "";   // Replace Hook
         var enableAutoZoom = true;   // Replace Hook
 
         var map = new ol.Map({
@@ -146,57 +149,99 @@
             }
         });
 
-        // Initiate websocket which will deliver continuous position updates
-        // We need to properly map our host/protocol to the websocket address
 
-        window.socket = new WebSocket(url.protocol.replace(/^http/, 'ws') + "//" + url.host + url.pathname);
+        //---------------------------------------------------------------------------------------------------------
+        //		Initialisierung
+        //---------------------------------------------------------------------------------------------------------
 
-        // Listen for messages
-        window.socket.addEventListener('message', function (event) {
-            let data = JSON.parse(event.data);
-            let pos = JSON.parse(data[0]);
-            console.log('Position', data.id, pos);
-            const source = new ol.source.Vector({
-                features: [
-                    new ol.Feature({
-                        geometry: new ol.geom.Point(ol.proj.fromLonLat([pos.lon,pos.lat]))
-                    })
-                ]
-            });      
-            Markers.forEach(function(Marker, index){
-                if(data.id == Marker.id){
-                    layers[index].setSource(source);
-                    icons[index].setSource(source);
-                }
-            });
+        manageWebSocket();
+        setTimer();
 
-            if(enableAutoZoom){
-                var maxExtent = [0,0,0,0];
-                for (let i = 0; i < 2; i++) {
-                    layers.forEach(function(item, index) {
-                        if(item.values_.zoom){
-                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
-                            maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
-                        }
-                    })
-                } 
-                for (let i = 2; i < 4; i++) {
-                    layers.forEach(function(item, index) {
-                        if(item.values_.zoom){
-                            if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
-                            maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
-                        }
-                    })
-                } 
-                console.log(map.getView().getProperties());
-                console.log(map.getProperties());
-                map.getView().fit(maxExtent , map.getSize());
-                var mapZoom = ((map.getView().getZoom()> 18)?18:map.getView().getZoom()) * 0.98;
-                map.getView().setZoom(mapZoom);
+        document.onvisibilitychange = () => {
+            if (document.visibilityState === "hidden") {
+                unsetTimer();
+                ws.close();
+            }else{
+                manageWebSocket();
+                setTimer();
             }
+        };
 
-        });
+        //---------------------------------------------------------------------------------------------------------
+        //		Timer setzen
+        //---------------------------------------------------------------------------------------------------------
 
+        function setTimer() {
+            reConnectInterval = self.setInterval(function(){manageWebSocket();}, 1000);
+        };
+
+        //---------------------------------------------------------------------------------------------------------
+        //		Timer zurücksetzen
+        //---------------------------------------------------------------------------------------------------------
+
+        function unsetTimer() {
+            clearInterval(reConnectInterval);
+        };
+
+        //---------------------------------------------------------------------------------------------------------
+        //		der WebSocket
+        //---------------------------------------------------------------------------------------------------------
+
+        function manageWebSocket() {
+            if(document.visibilityState === "hidden")return;
+            if((typeof ws != "undefined")&&(ws.readyState != WebSocket.CLOSED))return;
+            ws = new WebSocket(url.protocol.replace(/^http/, 'ws') + "//" + url.host + url.pathname);
+            ws.onclose = function(event) {
+                console.log("WebSocket is NOT active");
+            };
+            ws.onopen = function(event) {
+                console.log("WebSocket is active");
+                ws.send(socketOpen);
+            };
+            ws.onmessage = function(msg) {
+                let data = JSON.parse(msg.data);
+                let pos = JSON.parse(data[0]);
+                console.log('Position', data.id, pos);
+                const source = new ol.source.Vector({
+                    features: [
+                        new ol.Feature({
+                            geometry: new ol.geom.Point(ol.proj.fromLonLat([pos.lon,pos.lat]))
+                        })
+                    ]
+                });      
+                Markers.forEach(function(Marker, index){
+                    if(data.id == Marker.id){
+                        layers[index].setSource(source);
+                        icons[index].setSource(source);
+                    }
+                });
+
+                if(enableAutoZoom){
+                    var maxExtent = [0,0,0,0];
+                    for (let i = 0; i < 2; i++) {
+                        layers.forEach(function(item, index) {
+                            if(item.values_.zoom){
+                                if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                                maxExtent[i] = Math.min(maxExtent[i],item.getSource().getExtent()[i]);
+                            }
+                        })
+                    } 
+                    for (let i = 2; i < 4; i++) {
+                        layers.forEach(function(item, index) {
+                            if(item.values_.zoom){
+                                if(maxExtent[i] == 0)maxExtent[i] = item.getSource().getExtent()[i];
+                                maxExtent[i] = Math.max(maxExtent[i],item.getSource().getExtent()[i]);
+                            }
+                        })
+                    } 
+                    console.log(map.getView().getProperties());
+                    console.log(map.getProperties());
+                    map.getView().fit(maxExtent , map.getSize());
+                    var mapZoom = ((map.getView().getZoom()> 18)?18:map.getView().getZoom()) * 0.98;
+                    map.getView().setZoom(mapZoom);
+                }
+            }
+        }
 
         //---------------------------------------------------------------------------------------------------------
         //		Overlays

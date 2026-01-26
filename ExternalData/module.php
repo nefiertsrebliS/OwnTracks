@@ -1,10 +1,10 @@
 <?php
 
-	class ExternalData extends IPSModule
+	class ExternalData extends IPSModuleStrict
 	{
 
 		#================================================================================================
-		public function Create()
+		public function Create(): void
 		#================================================================================================
 		{
 			parent::Create();
@@ -20,7 +20,7 @@
 		}
 
 		#================================================================================================
-		public function ApplyChanges()
+		public function ApplyChanges(): void
 		#================================================================================================
 		{
 		    parent::ApplyChanges();
@@ -37,7 +37,7 @@
 		}
 
 		#================================================================================================
-		public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+		public function MessageSink(int $TimeStamp, int $SenderID, int $Message, mixed $Data): void
 		#================================================================================================
 		{
 			switch ($Message) {
@@ -89,7 +89,7 @@
 		}
 		
 		#================================================================================================
-		private function GetAddressString()
+		private function GetAddressString(): string
 		#================================================================================================
 		{
 
@@ -100,7 +100,7 @@
 			$position = json_decode($this->GetValue('position'));
 			$url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=".str_replace (",",".",$position->lat)."&lon=".str_replace (",",".",$position->lon);
 			$result = json_decode(@file_get_contents($url));
-			if(!is_object($result))return false;
+			if(!is_object($result))return '';
 
 			$str = @$result->address->road; 
 			$nr  = @$result->address->house_number;
@@ -117,7 +117,7 @@
 		}
         
 		#================================================================================================
-		private function CheckPosition()
+		private function CheckPosition(): void
 		#================================================================================================
 		{
 			$position = json_decode($this->GetValue('position'));
@@ -152,7 +152,7 @@
 		}
         
 		#================================================================================================
-		private function SeparateParameter(bool $separate)
+		private function SeparateParameter(bool $separate): void
 		#================================================================================================
 		{
 			if($separate){
@@ -167,7 +167,7 @@
         }
 	 
 		#=====================================================================================
-		public function GetConfigurationForm()
+		public function GetConfigurationForm(): string
 		#=====================================================================================
 		{
 			$form = json_decode(file_get_contents(__DIR__ . '/form.json'));
@@ -183,7 +183,7 @@
 		}
 	
 		#================================================================================================
-		public function RequestAction($Ident, $Value)
+		public function RequestAction(string $Ident, mixed $Value): void
 		#================================================================================================
 		{
 			switch($Ident) {
