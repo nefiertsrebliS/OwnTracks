@@ -59,6 +59,8 @@ class OwnTracksMap extends IPSModuleStrict
 				}
 			}
 			$this->RegisterHook($Hookname);
+            $maplink = '<iframe src="/hook/'.$Hookname.'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
+            $this->SetValue('maplink', $maplink);
 		}
 
         $this->ResetLock();
@@ -72,12 +74,6 @@ class OwnTracksMap extends IPSModuleStrict
                 $this->RegisterMessage(IPS_GetObjectIDByIdent('position', $device->InstanceID), VM_UPDATE);
             }
         }
-
-        if($this->GetStatus() == 206){
-            $maplink = '<iframe src="/hook/'.$this->ReadPropertyString('HookName').'?'.$this->getSecret().'" title="OwnTracks"  width="'.$this->ReadPropertyString('Width').'" height="'.$this->ReadPropertyString('Height').'"></iframe>';
-            $this->SetValue('maplink', $maplink);
-        }
-
     }
 
     #================================================================================================

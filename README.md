@@ -177,6 +177,10 @@
 		<td>Neu: Umstellung auf IPSModuleStrict<br>
 			Fix: Aktualisierung der Karte nach Unterbrechung der Server-Verbindung</td>
 	  </tr>
+	  <tr>
+		<td>V2.01 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Fix: Karten-URL wird nicht aktualisiert</td>
+	  </tr>
 	</table>
   </body>
 </html>
