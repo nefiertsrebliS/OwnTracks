@@ -26,6 +26,7 @@ class OwnTracksMap extends IPSModuleStrict
         $this->RegisterPropertyBoolean('AllowMapRotation', false);
         $this->RegisterPropertyBoolean('AllowMapAutoZoom', true);
         $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
+        $this->RegisterAttributeString('verifiedClients', '{}');
         $this->RegisterVariableString('maplink', 'Map', '~HTMLBox');
     }
 

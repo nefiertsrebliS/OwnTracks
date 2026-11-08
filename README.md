@@ -181,6 +181,10 @@
 		<td>V2.01 &nbsp;&nbsp;&nbsp;&nbsp;</td>
 		<td>Fix: Karten-URL wird nicht aktualisiert</td>
 	  </tr>
+	  <tr>
+		<td>V2.02 &nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td>Neu: Verifizierte Clients mit korrektem Passwort haben auch bei gesperrter Instanz Zugang</td>
+	  </tr>
 	</table>
   </body>
 </html>

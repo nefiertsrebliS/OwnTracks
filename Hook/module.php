@@ -19,6 +19,7 @@ class OwnTracksHook extends IPSModuleStrict
         $this->RegisterPropertyString('Password', '');
         $this->RegisterPropertyString('HookName', '');
         $this->RegisterAttributeString('LoginStatus', '{"Data":[], "LockedIP":[], "Status":102}');
+        $this->RegisterAttributeString('verifiedClients', '{}');
     }
 
     #=====================================================================================
@@ -53,8 +54,6 @@ class OwnTracksHook extends IPSModuleStrict
 			}
 			$this->RegisterHook($Hookname);
 		}
-
-        $this->ResetLock(); 
     }
 
     #=====================================================================================

@@ -90,7 +90,6 @@ class OwnTrackWaypoint extends IPSModuleStrict
 
 					if(!$entry && isset($Payload->t) && $Payload->t == "b" && isset($Payload->lon) && isset($Payload->lat) && isset($Payload->tst)){
 						$attributes = json_decode($this->ReadAttributeString('attributes'));
-						$rid = $Payload->rid;
 						if(isset($attributes->rad) && $attributes->rad < 0 && $this->ReadPropertyBoolean('showPositionData')){
 							$this->RegisterVariableString('position', $this->Translate('Position'));
 							$position = array('tst'=> $Payload->tst, 'lat'=> $Payload->lat, 'lon'=> $Payload->lon);

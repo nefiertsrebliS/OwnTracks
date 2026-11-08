@@ -253,7 +253,8 @@ class OwnTrackData extends IPSModuleStrict
 		if(!$ort)$ort = @$result->address->village;
 		if($ort && isset($result->address->municipality)){
 			$names = explode(', ', $result->display_name);
-			$ort = $names[array_search($result->address->municipality, $names)-1];
+			$pos = array_search($result->address->municipality, $names)-1;
+			if($pos >= 0)$ort = $names[$pos];
 		}
 		if(!$ort)$ort = @$result->address->suburb;
 		if(!$ort)$ort = @$result->address->city_district;

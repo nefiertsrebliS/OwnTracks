@@ -22,33 +22,40 @@ trait HookHelper
             $IP = $_SERVER['REMOTE_ADDR'];
         }
 
-        #---------------------------------------------------------
-        #   Login authorized?
-        #---------------------------------------------------------
-        
-        #   Instanz blockiert
-        if ($this->GetStatus() == 205) {
-            $this->LogMessage("Instance #".$this->InstanceID." is locked! Please unlock to process data! Access attempt from IP ".$IP, KL_ERROR);
-            header('HTTP/1.0 423 Locked');
-            echo 'Page locked';
-            return false;
-        }
+        if ($this->VerifiedClient(@$_SERVER['HTTP_X_LIMIT_D'], @$_SERVER['HTTP_X_LIMIT_U'], @$_SERVER['PHP_AUTH_USER'], @$_SERVER['PHP_AUTH_PW'])){
 
-        #   IP blockiert
-        $this->RefreshLoginStatus();
-        $LockedIPs = json_decode($this->ReadAttributeString('LoginStatus'),true)['LockedIP'];
-        if (in_array($IP, $LockedIPs)) {
-            $this->LogMessage("Instance #".$this->InstanceID." is locked for IP ".$IP."! Please unlock to process data!", KL_ERROR);
-            header('HTTP/1.0 423 Locked');
-            echo 'Page locked';
-            return false;
-        }
+            #---------------------------------------------------------
+            #   verified Client
+            #---------------------------------------------------------
 
-        if (!isset($_SERVER['PHP_AUTH_USER'])) $_SERVER['PHP_AUTH_USER'] = '';
-        if (!isset($_SERVER['PHP_AUTH_PW'])) $_SERVER['PHP_AUTH_PW'] = '';
+            $this->RefreshLoginStatus();
+        }else{
+
+            #---------------------------------------------------------
+            #   Login authorized?
+            #---------------------------------------------------------
+            
+            #   Instanz blockiert
+            if ($this->GetStatus() == 205) {
+                $this->LogMessage("Instance #".$this->InstanceID." is locked! Please unlock to process data! Access attempt from IP ".$IP, KL_ERROR);
+                header('HTTP/1.0 423 Locked');
+                echo 'Page locked';
+                return false;
+            }
+
+            #   IP blockiert
+            $this->RefreshLoginStatus();
+            $LockedIPs = json_decode($this->ReadAttributeString('LoginStatus'),true)['LockedIP'];
+            if (in_array($IP, $LockedIPs)) {
+                $this->LogMessage("Instance #".$this->InstanceID." is locked for IP ".$IP."! Please unlock to process data!", KL_ERROR);
+                header('HTTP/1.0 423 Locked');
+                echo 'Page locked';
+                return false;
+            }
+        }
 
         $LogInOk = false;
-        if ($_SERVER['PHP_AUTH_USER'] == $this->ReadPropertyString('Username') && $_SERVER['PHP_AUTH_PW'] == $this->ReadPropertyString('Password'))$LogInOk = true;
+        if (@$_SERVER['PHP_AUTH_USER'] == $this->ReadPropertyString('Username') && @$_SERVER['PHP_AUTH_PW'] == $this->ReadPropertyString('Password'))$LogInOk = true;
         if(isset($_GET[$this->getSecret()]))$LogInOk = true;
         $this->SetLoginStatus($IP, $LogInOk);
 
@@ -58,7 +65,7 @@ trait HookHelper
             echo 'Authorization required';
             $this->SendDebug('Unauthorized $_SERVER', json_encode($_SERVER), 0);
             $this->SendDebug('Unauthorized $_GET', json_encode($_GET), 0);
-            if ($_SERVER['PHP_AUTH_USER'] != '' || $_SERVER['PHP_AUTH_PW'] != '')$this->LogMessage("Instance #".$this->InstanceID.": Unauthorized access attempt from IP ".$IP, KL_WARNING);
+            $this->LogMessage("Instance #".$this->InstanceID.": Unauthorized access attempt from IP ".$IP, KL_WARNING);
             return false;
         }
 
@@ -91,6 +98,44 @@ trait HookHelper
         return json_encode($form);
     }
     
+    #=====================================================================================
+    private function VerifiedClient(mixed $clientID, mixed $groupID, mixed $user, mixed $pass): bool
+    #=====================================================================================
+    {
+        $verified = false;
+
+        $this->SendDebug('verifiedClients', $this->ReadAttributeString('verifiedClients'),0);
+        $verifiedClients = json_decode($this->ReadAttributeString('verifiedClients'));
+
+        #---------------------------------------------------------
+        #   reject old clients
+        #---------------------------------------------------------
+
+        foreach($verifiedClients as $ID => $client){
+            if(time() - $client->time > 30*24*3600) unset($verifiedClients->$ID);
+        }
+
+        #---------------------------------------------------------
+        #   verify client
+        #---------------------------------------------------------
+
+        if (($clientID != '')
+            && ($clientID != NULL)
+            && (property_exists($verifiedClients, $clientID))
+            && ($verifiedClients->$clientID->name == $groupID)
+        ) {
+            if(($user == $this->ReadPropertyString('Username')) && ($pass == $this->ReadPropertyString('Password'))){
+                $verifiedClients->$clientID = array("name" => $groupID, "time" => time());
+                $verified = true;
+            }else{
+                unset($verifiedClients->$clientID);
+            }
+        }
+
+        $this->WriteAttributeString('verifiedClients', json_encode($verifiedClients));
+        return $verified;
+    }
+
     #=====================================================================================
     private function RefreshLoginStatus(): void
     #=====================================================================================
