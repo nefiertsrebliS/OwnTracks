@@ -60,6 +60,7 @@ class OwnTracksHook extends IPSModuleStrict
     protected function ProcessHookData(): void
     #=====================================================================================
     {
+        $this->SendDebug('$_SERVER', json_encode($_SERVER), 0);
         if(!$this->ProcessHookSecurity())return;
 
         header("Content-type: application/json");
