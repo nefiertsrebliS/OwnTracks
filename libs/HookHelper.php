@@ -55,14 +55,16 @@ trait HookHelper
         }
 
         $LogInOk = false;
-        if (@$_SERVER['PHP_AUTH_USER'] == $this->ReadPropertyString('Username') && @$_SERVER['PHP_AUTH_PW'] == $this->ReadPropertyString('Password'))$LogInOk = true;
+        if (@$_SERVER['PHP_AUTH_USER'] == $this->ReadPropertyString('Username') && @$_SERVER['PHP_AUTH_PW'] == $this->ReadPropertyString('Password')){
+            $this->AddVerifiedClient(@$_SERVER['HTTP_X_LIMIT_D'], @$_SERVER['HTTP_X_LIMIT_U']);
+            $LogInOk = true;
+        }
         if(isset($_GET[$this->getSecret()]))$LogInOk = true;
         $this->SetLoginStatus($IP, $LogInOk);
 
         if(!$LogInOk){
             header('WWW-Authenticate: Basic Realm="WebHook"');
             header('HTTP/1.0 401 Unauthorized');
-            echo 'Authorization required';
             $this->SendDebug('Unauthorized $_SERVER', json_encode($_SERVER), 0);
             $this->SendDebug('Unauthorized $_GET', json_encode($_GET), 0);
             $this->LogMessage("Instance #".$this->InstanceID.": Unauthorized access attempt from IP ".$IP, KL_WARNING);
@@ -103,8 +105,6 @@ trait HookHelper
     #=====================================================================================
     {
         $verified = false;
-
-        $this->SendDebug('verifiedClients', $this->ReadAttributeString('verifiedClients'),0);
         $verifiedClients = json_decode($this->ReadAttributeString('verifiedClients'));
 
         #---------------------------------------------------------
@@ -122,9 +122,8 @@ trait HookHelper
         if (($clientID != '')
             && ($clientID != NULL)
             && (property_exists($verifiedClients, $clientID))
-            && ($verifiedClients->$clientID->name == $groupID)
         ) {
-            if(($user == $this->ReadPropertyString('Username')) && ($pass == $this->ReadPropertyString('Password'))){
+            if(($user == $this->ReadPropertyString('Username')) && ($pass == $this->ReadPropertyString('Password')) && ($verifiedClients->$clientID->name == $groupID)){
                 $verifiedClients->$clientID = array("name" => $groupID, "time" => time());
                 $verified = true;
             }else{
@@ -133,7 +132,32 @@ trait HookHelper
         }
 
         $this->WriteAttributeString('verifiedClients', json_encode($verifiedClients));
+        $this->SendDebug(__FUNCTION__, $this->ReadAttributeString('verifiedClients'),0);
+        $this->SendDebug(__FUNCTION__, ($verified)?'verifiziert':'nicht verifiziert',0);
         return $verified;
+    }
+    
+    #=====================================================================================
+    private function AddVerifiedClient(mixed $clientID, mixed $groupID): void
+    #=====================================================================================
+    {
+        if (($clientID == '') || ($clientID == NULL)) {
+            $this->SendDebug(__FUNCTION__, 'unvalid ClientID',0);
+            return;
+        }
+        if (($groupID == '') || ($groupID == NULL)) {
+            $this->SendDebug(__FUNCTION__, 'unvalid GroupID',0);
+            return;
+        }
+
+        #---------------------------------------------------------
+        #   add client
+        #---------------------------------------------------------
+        
+        $verifiedClients = json_decode($this->ReadAttributeString('verifiedClients'));
+        $verifiedClients->$clientID = array("name" => $groupID, "time" => time());
+        $this->WriteAttributeString('verifiedClients', json_encode($verifiedClients));
+        $this->SendDebug(__FUNCTION__, $this->ReadAttributeString('verifiedClients'),0);
     }
 
     #=====================================================================================
